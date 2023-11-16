@@ -1,9 +1,8 @@
 const { Schema, model } = require('mongoose');
 const handleMongooseError = require('../helpers/handleMongooseError');
 
-const contactSchema = new Schema();
-//add your code
+const noticeSchema = new Schema();
 
-contactSchema.post('save', handleMongooseError);
+noticeSchema.post('save', handleMongooseError);
 
-module.exports = model('contact', contactSchema);
+module.exports = model('contact', noticeSchema);

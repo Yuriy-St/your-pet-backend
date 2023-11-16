@@ -1,9 +1,5 @@
 const Notice = require('../models/Notice');
 
-class NoticeService {
-  // add your code
-}
+class NoticeService {}
 
-const contactService = new NoticeService();
-
-module.exports = contactService;
+module.exports = new NoticeService();

@@ -183,7 +183,7 @@
           "name": {
             "type": "string",
             "description": "User's name",
-            "format": "name"
+            "example": "Denis"
           },
           "email": {
             "type": "string",

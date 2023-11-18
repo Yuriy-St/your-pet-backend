@@ -7,13 +7,13 @@ class PetsController {
   avatarsDir = path.join(__dirname, '..', 'public', 'avatars');
 
   addPet = asyncHandler(async (req, res) => {
-    const { name, birth, type, comments, petAvatarURL } =
+    const { _id, name, birth, type, comments, petAvatarURL } =
       await PetsService.addPet(req.body);
 
     res.status(201).json({
       code: 201,
       message: 'Pet add successfully.',
-      data: { name, birth, type, comments, petAvatarURL },
+      data: { _id, name, birth, type, comments, petAvatarURL },
     });
   });
 
@@ -28,6 +28,7 @@ class PetsController {
   });
 
   updatePetPhoto = asyncHandler(async (req, res) => {
+    //! TODO fix this mthod
     const { name } = req.params;
     const { path: tempDir, originalname } = req.file;
     const filename = `${name}_${originalname}`;

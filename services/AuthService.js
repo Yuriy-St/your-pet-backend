@@ -45,7 +45,7 @@ class AuthService {
       expiresIn: '744h',
     });
     await User.findByIdAndUpdate(candidate._id, { token });
-    
+
     return { token };
   }
 
@@ -59,6 +59,11 @@ class AuthService {
   async logout({ _id }) {
     const response = await User.findByIdAndUpdate(_id, { token: null });
     return response;
+  }
+
+  async update(id, body = {}) {
+    const candidate = await User.findByIdAndUpdate(id, body, { new: true });
+    return candidate;
   }
 }
 

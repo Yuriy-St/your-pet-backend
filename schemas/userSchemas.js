@@ -21,9 +21,20 @@ const loginSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
+const updateSchema = Joi.object({
+  name: Joi.string(),
+  email: Joi.string().email({
+    minDomainSegments: 2,
+    tlds: false,
+  }),
+  birthday: Joi.string(),
+  phone: Joi.string(),
+  city: Joi.string(),
+  avatarURL: Joi.string(),
+});
+
 module.exports = {
   registerSchema,
   loginSchema,
-  // updateSchema,
-  // verifyEmailSchema,
+  updateSchema,
 };

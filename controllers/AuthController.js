@@ -18,8 +18,7 @@ class AuthController {
 
     res.status(201).json({
       code: 201,
-      message:
-        'User registered successfully.',
+      message: 'User registered successfully.',
       data: { name, email, avatarURL },
     });
   });
@@ -42,6 +41,40 @@ class AuthController {
     });
   });
 
+  current = asyncHandler((req, res) => {
+    const { name, email, birthday, phone, city, avatarURL } = req.user;
+    res.status(200).json({
+      code: 200,
+      message: 'OK',
+      data: { name, email, birthday, phone, city, avatarURL },
+    });
+  });
+
+  update = asyncHandler(async (req, res) => {
+    const { name, email, birthday, phone, city, avatarURL } =
+      await AuthService.update(req.user._id, req.body);
+    res.status(200).json({
+      code: 200,
+      message: 'User updated successfully',
+      data: { name, email, birthday, phone, city, avatarURL },
+    });
+  });
+
+  updateAvatar = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const { path: tempDir, originalname } = req.file;
+    const filename = `${_id}_${originalname}`;
+    const avatarPath = path.join(this.avatarsDir, filename);
+    await fs.rename(tempDir, avatarPath);
+    const avatarURL = path.join('avatars', filename);
+    await AuthService.update(_id, { avatarURL });
+
+    res.status(200).json({
+      code: 200,
+      message: 'User avatar updated successfully',
+      data: { avatarURL },
+    });
+  });
 }
 
 module.exports = new AuthController();

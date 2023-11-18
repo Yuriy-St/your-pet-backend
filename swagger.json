@@ -172,6 +172,158 @@
           }
         }
       }
+    },
+    "/api/users/avatars": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "Update users avatar",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "User avatar file",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/AvatarRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User avatar updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "500": {
+            "description": "Cannot find path of avatar file",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/pets/add-pet": {
+      "post": {
+        "tags": ["Pets"],
+        "summary": "Add users pet",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Pet object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pet add successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetSchema"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Pet is already added",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/pets/del-pet/{name}": {
+      "post": {
+        "tags": ["Pets"],
+        "summary": "Delete user pet",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "type": "string",
+            "description": "Pets name from users data-base"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Pet object",
+          "required": true,
+          "content": {}
+        },
+        "responses": {
+          "200": {
+            "description": "Pet successfully delete",
+            "content": {}
+          },
+          "404": {
+            "description": "Pet not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/pets/pet-photo/{name}": {
+      "patch": {
+        "tags": ["Pets"],
+        "summary": "Update pets avatar",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "name",
+            "required": true,
+            "type": "string",
+            "description": "Pets name from users data-base"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Pets avatar file",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/AvatarRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User avatar updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "500": {
+            "description": "Cannot find path of avatar file",
+            "content": {}
+          }
+        }
+      }
     }
   },
   "components": {
@@ -310,6 +462,46 @@
             "type": "string",
             "description": "User's avatar",
             "example": "https://res.cloudinary.com/dfltmvg4t/image/v1700298149/placeholder.jpg"
+          }
+        }
+      },
+      "AvatarRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "example": "/avatars/user123_avatar.jpg"
+          }
+        }
+      },
+      "PetSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Pet's name",
+            "example": "Jess"
+          },
+          "type": {
+            "type": "string",
+            "description": "Pet's type",
+            "example": "Scottish fold"
+          },
+          "birth": {
+            "type": "string",
+            "description": "Pet's birthday",
+            "example": "01.01.2020"
+          },
+          "comments": {
+            "type": "string",
+            "description": "Pet's description",
+            "example": "Can talk with you"
+          },
+          "petAvatarURL": {
+            "type": "string",
+            "description": "Pet's avatar",
+            "example": "https://res.cloudinary.com/dfltmvg4t/image/pet.jpg"
           }
         }
       }

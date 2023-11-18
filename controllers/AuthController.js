@@ -3,9 +3,6 @@ const AuthService = require('../services/AuthService');
 const gravatar = require('gravatar');
 const fs = require('fs/promises');
 const path = require('path');
-const HttpError = require('../helpers/HttpError');
-
-const { BASE_URL } = process.env;
 
 class AuthController {
   avatarsDir = path.join(__dirname, '..', 'public', 'avatars');

@@ -2,7 +2,6 @@ const HttpError = require('../helpers/HttpError');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { nanoid } = require('nanoid');
 
 class AuthService {
   async register(body) {
@@ -13,13 +12,12 @@ class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const verificationCode = nanoid();
 
     const newUser = await User.create({
       ...body,
       password: hashedPassword,
-      verificationCode,
     });
+    
     return newUser;
   }
 

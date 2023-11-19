@@ -1,6 +1,5 @@
 const asyncHandler = require('../helpers/asyncHandler');
 const AuthService = require('../services/AuthService');
-const gravatar = require('gravatar');
 const fs = require('fs/promises');
 const path = require('path');
 
@@ -10,7 +9,7 @@ class AuthController {
   register = asyncHandler(async (req, res) => {
     const { name, email, avatarURL } = await AuthService.register({
       ...req.body,
-      avatarURL: gravatar.url(req.body.email),
+      avatarURL: "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg",
     });
 
     res.status(201).json({

@@ -8,6 +8,7 @@ class AuthController {
       await AuthService.register({
         ...req.body,
         avatarURL: process.env.AVATAR_DEFAULT_URL,
+        avatarId: `${req.body.name}_${Date.now()}`,
       });
     const { token } = await AuthService.login(req.body);
 
@@ -49,38 +50,27 @@ class AuthController {
   });
 
   update = asyncHandler(async (req, res) => {
-    // const { name, email, birthday, phone, city, avatarURL } =
-    //   await AuthService.update(req.user._id, req.body);
-    // res.status(200).json({
-    //   code: 200,
-    //   message: 'User updated successfully',
-    //   data: { name, email, birthday, phone, city, avatarURL },
-    // });
-    res.status(500).json({
-      code: 500,
-      message: 'User update under consturction',
-    });
-  });
+    const { user, body, file } = req;
+    if (file?.path) {
+      const { secure_url, public_id } = await fileController.upload(
+        file.path,
+        null,
+        user.avatarId
+      );
+      body.avatarURL = secure_url;
+      body.avatarId = public_id;
+    }
 
-  updateAvatar = asyncHandler(async (req, res) => {
-    // const { _id } = req.user;
-    // const { path: tmpPath, originalname } = req.file;
-    // const filename = `${_id}_${originalname}`;
+    let { name, email, birthday, phone, city, avatarURL } =
+      await AuthService.update(user._id, body);
 
-    // const avatarURL = fileController();
-    // await AuthService.update(_id, { avatarURL });
-
-    // res.status(200).json({
-    //   code: 200,
-    //   message: 'User avatar updated successfully',
-    //   data: { avatarURL },
-    // });
-
-    res.status(500).json({
-      code: 500,
-      message: 'User avatar update under consturction',
+    res.status(200).json({
+      code: 200,
+      message: 'User updated successfully',
+      data: { name, email, birthday, phone, city, avatarURL },
     });
   });
 }
 
-module.exports = new AuthController();
+const authController = new AuthController();
+module.exports = authController;

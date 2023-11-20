@@ -24,14 +24,15 @@ router.patch(
   '/',
   authenticate,
   validateBody(schemas.updateSchema),
+  upload.single('avatar'),
   authController.update
 );
 
-router.patch(
-  '/avatars',
-  authenticate,
-  upload.single('avatar'),
-  authController.updateAvatar
-);
+// router.patch(
+//   '/avatar',
+//   authenticate,
+//   upload.single('avatar'),
+//   authController.updateAvatar
+// );
 
 module.exports = router;

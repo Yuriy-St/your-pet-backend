@@ -17,7 +17,7 @@ class AuthService {
       ...body,
       password: hashedPassword,
     });
-    
+
     return newUser;
   }
 
@@ -60,8 +60,12 @@ class AuthService {
   }
 
   async update(id, body = {}) {
-    const candidate = await User.findByIdAndUpdate(id, body, { new: true });
-    return candidate;
+    try {
+      const candidate = await User.findByIdAndUpdate(id, body, { new: true });
+      return candidate;
+    } catch (err) {
+      throw HttpError(304, err.message);
+    }
   }
 }
 

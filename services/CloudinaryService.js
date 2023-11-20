@@ -19,7 +19,6 @@ class CloudinaryService {
       ...this.#options,
       ...opts,
     });
-    console.log(result);
     return result;
   }
 

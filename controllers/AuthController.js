@@ -1,3 +1,4 @@
+const path = require('path');
 const asyncHandler = require('../helpers/asyncHandler');
 const AuthService = require('../services/AuthService');
 const fileController = require('./FileController');
@@ -54,11 +55,11 @@ class AuthController {
     if (file?.path) {
       const { secure_url, public_id } = await fileController.upload(
         file.path,
-        null,
+        'avatars',
         user.avatarId
       );
       body.avatarURL = secure_url;
-      body.avatarId = public_id;
+      body.avatarId = public_id ? path.parse(public_id).name : null;
     }
 
     let { name, email, birthday, phone, city, avatarURL } =

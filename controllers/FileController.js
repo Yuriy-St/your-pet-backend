@@ -2,12 +2,17 @@ const fs = require('fs/promises');
 const cloudinaryService = require('../services/CloudinaryService');
 
 class FileController {
-  upload = async (initPath, destFolder) => {
-    const { secure_url: secureURL, public_id: publicId } =
-      await cloudinaryService.uploadResource(initPath, destFolder);
-    fs.unlink(initPath);
+  upload = async (srcPath, folder = '', id = '') => {
+    const { secure_url, public_id } = await cloudinaryService.uploadResource(
+      srcPath,
+      {
+        folder,
+        public_id: id,
+      }
+    );
+    fs.unlink(srcPath);
 
-    return { secureURL, publicId };
+    return { secure_url, public_id };
   };
 
   delete = async id => {

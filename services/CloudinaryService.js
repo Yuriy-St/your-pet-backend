@@ -9,16 +9,17 @@ console.log(cloudinary.config);
 class CloudinaryService {
   #options = {
     use_filename: true,
-    unique_filename: false,
+    unique_filename: true,
     overwrite: true,
+    invalidate: true,
   };
 
-  async uploadResource(resourcePath, folder = '') {
+  async uploadResource(resourcePath, opts = {}) {
     const result = await cloudinary.uploader.upload(resourcePath, {
       ...this.#options,
-      folder,
+      ...opts,
     });
-
+    console.log(result);
     return result;
   }
 

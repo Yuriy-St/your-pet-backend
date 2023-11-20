@@ -24,14 +24,8 @@ router.patch(
   '/',
   authenticate,
   validateBody(schemas.updateSchema),
-  authController.update
-);
-
-router.patch(
-  '/avatars',
-  authenticate,
   upload.single('avatar'),
-  authController.updateAvatar
+  authController.update
 );
 
 module.exports = router;

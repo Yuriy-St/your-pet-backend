@@ -1,5 +1,5 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.3",
   "info": {
     "version": "0.0.1",
     "title": "Pet store",
@@ -9,9 +9,18 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "consumes": ["application/json", "multipart/form-data"],
-  "produces": ["application/json"],
-  "servers": [{ "url": "http://localhost:5000" }],
+  "consumes": [
+    "application/json",
+    "multipart/form-data"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:5000"
+    }
+  ],
   "tags": [
     {
       "name": "Auth",
@@ -26,11 +35,12 @@
       "description": "Add users pet endpoints"
     }
   ],
-
   "paths": {
     "/api/users/register": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "User registration",
         "parameters": [],
         "requestBody": {
@@ -64,7 +74,9 @@
     },
     "/api/users/login": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "User login",
         "parameters": [],
         "requestBody": {
@@ -98,10 +110,16 @@
     },
     "/api/users/logout": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "Logout user",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "User logged out successfully",
@@ -116,10 +134,16 @@
     },
     "/api/users/current": {
       "get": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "Get info of current user",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -140,17 +164,55 @@
     },
     "/api/users/": {
       "patch": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "Update user information",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {
           "description": "Users information full object",
           "required": false,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateRequest"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "User's name",
+                    "example": "Denis"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "User's email",
+                    "format": "email"
+                  },
+                  "birthday": {
+                    "type": "string",
+                    "description": "User's birthday",
+                    "example": "01.01.2000"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "User's phone number",
+                    "example": "+380968038877"
+                  },
+                  "city": {
+                    "type": "string",
+                    "description": "User's address",
+                    "example": "Kyiv"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Attached image"
+                  }
+                }
               }
             }
           }
@@ -173,51 +235,18 @@
         }
       }
     },
-    "/api/users/avatars": {
-      "patch": {
-        "tags": ["Auth"],
-        "summary": "Update users avatar",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "User avatar file",
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/AvatarRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "User avatar updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CurrentResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {}
-          },
-          "500": {
-            "description": "Cannot find path of avatar file",
-            "content": {}
-          }
-        }
-      }
-    },
     "/api/pets/add-pet": {
       "post": {
-        "tags": ["Pets"],
+        "tags": [
+          "Pets"
+        ],
         "summary": "Add users pet",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {
           "description": "Pet object",
           "required": true,
@@ -249,7 +278,9 @@
     },
     "/api/pets/del-pet/{name}": {
       "post": {
-        "tags": ["Pets"],
+        "tags": [
+          "Pets"
+        ],
         "summary": "Delete user pet",
         "parameters": [
           {
@@ -260,7 +291,11 @@
             "description": "Pets name from users data-base"
           }
         ],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {
           "description": "Pet object",
           "required": true,
@@ -280,7 +315,9 @@
     },
     "/api/pets/pet-photo/{name}": {
       "patch": {
-        "tags": ["Pets"],
+        "tags": [
+          "Pets"
+        ],
         "summary": "Update pets avatar",
         "parameters": [
           {
@@ -291,14 +328,18 @@
             "description": "Pets name from users data-base"
           }
         ],
-        "security": [{ "Bearer": [] }],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
         "requestBody": {
           "description": "Pets avatar file",
           "required": true,
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/AvatarRequest"
+                "$ref": "#/components/schemas/ImageRequest"
               }
             }
           }
@@ -330,7 +371,11 @@
     "schemas": {
       "RegistrationRequest": {
         "type": "object",
-        "required": ["name", "email", "password"],
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -371,7 +416,10 @@
       },
       "LoginRequest": {
         "type": "object",
-        "required": ["email", "password"],
+        "required": [
+          "email",
+          "password"
+        ],
         "properties": {
           "email": {
             "type": "string",
@@ -421,16 +469,16 @@
           "city": {
             "type": "string",
             "description": "User's address",
-            "example": "Kiev"
+            "example": "Kyiv"
           },
           "avatarURL": {
             "type": "string",
-            "description": "User's avatar",
+            "description": "User's avatar URL",
             "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
           }
         }
       },
-      "UpdateRequest": {
+      "UserUpdateRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -458,14 +506,14 @@
             "description": "User's address",
             "example": "Kiev"
           },
-          "avatarURL": {
+          "avatar": {
             "type": "string",
-            "description": "User's avatar",
-            "example": "https://res.cloudinary.com/dfltmvg4t/image/v1700298149/placeholder.jpg"
+            "format": "binary",
+            "description": "Attached image"
           }
         }
       },
-      "AvatarRequest": {
+      "ImageRequest": {
         "type": "object",
         "properties": {
           "code": {

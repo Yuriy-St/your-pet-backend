@@ -28,11 +28,4 @@ router.patch(
   authController.update
 );
 
-// router.patch(
-//   '/avatar',
-//   authenticate,
-//   upload.single('avatar'),
-//   authController.updateAvatar
-// );
-
 module.exports = router;

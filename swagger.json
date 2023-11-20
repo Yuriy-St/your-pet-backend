@@ -9,16 +9,10 @@
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "consumes": [
-    "application/json",
-    "multipart/form-data"
-  ],
-  "produces": [
-    "application/json"
-  ],
   "servers": [
     {
-      "url": "http://localhost:5000"
+      "url": "https://your-pet-server.onrender.com",
+      "description": "Main server"
     }
   ],
   "tags": [
@@ -44,10 +38,10 @@
         "summary": "User registration",
         "parameters": [],
         "requestBody": {
-          "description": "Registration's object",
+          "description": "Registration form",
           "required": true,
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
                 "$ref": "#/components/schemas/RegistrationRequest"
               }
@@ -80,10 +74,10 @@
         "summary": "User login",
         "parameters": [],
         "requestBody": {
-          "description": "Login object",
+          "description": "Login form",
           "required": true,
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
                 "$ref": "#/components/schemas/LoginRequest"
               }
@@ -150,7 +144,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentResponse"
+                  "$ref": "#/components/schemas/CurrentUserResponse"
                 }
               }
             }
@@ -175,7 +169,7 @@
           }
         ],
         "requestBody": {
-          "description": "Users information full object",
+          "description": "User's information form",
           "required": false,
           "content": {
             "multipart/form-data": {
@@ -223,7 +217,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentResponse"
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/CurrentUserResponse"
+                    }
+                  }
                 }
               }
             }
@@ -350,7 +350,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentResponse"
+                  "$ref": "#/components/schemas/CurrentUserResponse"
                 }
               }
             }
@@ -397,20 +397,28 @@
       "RegistrationResponse": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "description": "User's name",
-            "example": "Anna"
+          "user": {
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "User's name",
+                "example": "Anna"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar",
+                "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+              }
+            }
           },
-          "email": {
+          "token": {
             "type": "string",
-            "description": "User's email",
-            "format": "email"
-          },
-          "avatarURL": {
-            "type": "string",
-            "description": "User's avatar",
-            "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+            "description": "User's token"
           }
         }
       },
@@ -443,7 +451,7 @@
           }
         }
       },
-      "CurrentResponse": {
+      "CurrentUserResponse": {
         "type": "object",
         "properties": {
           "name": {

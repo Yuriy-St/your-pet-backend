@@ -17,7 +17,7 @@ class AuthController {
       code: 201,
       message: 'User registered successfully.',
       data: {
-        user: { name, email, birthday, phone, city, avatarURL },
+        user: { name, email, avatarURL },
         token,
       },
     });

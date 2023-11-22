@@ -19,6 +19,9 @@ class AuthController {
         user: {
           name: user.name,
           email: user.email,
+          birthday: user.birthday || '',
+          phone: user.phone || '',
+          city: user.city,
           avatarURL: user.avatarURL,
         },
         token: user.token,
@@ -68,7 +71,6 @@ class AuthController {
           city: user.city,
           avatarURL: user.avatarURL,
         },
-        token: user.token,
       },
     });
   });
@@ -99,7 +101,6 @@ class AuthController {
           city: updUser.city,
           avatarURL: updUser.avatarURL,
         },
-        token: updUser.token,
       },
     });
   });

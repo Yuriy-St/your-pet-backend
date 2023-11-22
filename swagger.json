@@ -444,6 +444,9 @@
       "LoginResponse": {
         "type": "object",
         "properties": {
+          "user": {
+            "$ref": "#/components/schemas/CurrentUserResponse"
+          },
           "token": {
             "type": "string",
             "description": "Bearer token",

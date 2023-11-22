@@ -1,3 +1,4 @@
+const path = require('path');
 const asyncHandler = require('../helpers/asyncHandler');
 const AuthService = require('../services/AuthService');
 const fileController = require('./FileController');
@@ -16,19 +17,29 @@ class AuthController {
       code: 201,
       message: 'User registered successfully.',
       data: {
-        user: { name, email, birthday, phone, city, avatarURL },
+        user: { name, email, avatarURL },
         token,
       },
     });
   });
 
   login = asyncHandler(async (req, res) => {
-    const { token } = await AuthService.login(req.body);
+    const user = await AuthService.login(req.body);
 
     res.status(200).json({
       code: 200,
       message: 'User logged in successfully',
-      token,
+      data: {
+        user: {
+          name: user.name,
+          email: user.email,
+          birthday: user.birthday || '',
+          phone: user.phone || '',
+          city: user.city,
+          avatarURL: user.avatarURL,
+        },
+        token: user.token,
+      },
     });
   });
 
@@ -41,11 +52,21 @@ class AuthController {
   });
 
   current = asyncHandler((req, res) => {
-    const { name, email, birthday, phone, city, avatarURL } = req.user;
+    const { user } = req;
     res.status(200).json({
       code: 200,
       message: 'OK',
-      data: { name, email, birthday, phone, city, avatarURL },
+      data: {
+        user: {
+          name: user.name,
+          email: user.email,
+          birthday: user.birthday || '',
+          phone: user.phone || '',
+          city: user.city,
+          avatarURL: user.avatarURL,
+        },
+        token: user.token,
+      },
     });
   });
 
@@ -54,20 +75,29 @@ class AuthController {
     if (file?.path) {
       const { secure_url, public_id } = await fileController.upload(
         file.path,
-        null,
+        'avatars',
         user.avatarId
       );
       body.avatarURL = secure_url;
-      body.avatarId = public_id;
+      body.avatarId = public_id ? path.parse(public_id).name : null;
     }
 
-    let { name, email, birthday, phone, city, avatarURL } =
-      await AuthService.update(user._id, body);
+    const updUser = await AuthService.update(user._id, body);
 
     res.status(200).json({
       code: 200,
       message: 'User updated successfully',
-      data: { name, email, birthday, phone, city, avatarURL },
+      data: {
+        user: {
+          name: updUser.name,
+          email: updUser.email,
+          birthday: updUser.birthday || '',
+          phone: updUser.phone || '',
+          city: updUser.city,
+          avatarURL: updUser.avatarURL,
+        },
+        token: updUser.token,
+      },
     });
   });
 }

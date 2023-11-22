@@ -42,7 +42,11 @@ class AuthService {
     const token = jwt.sign(payload, SECRET_KEY, {
       expiresIn: '744h',
     });
-    const user = await User.findByIdAndUpdate(candidate._id, { token }, {new: true});
+    const user = await User.findByIdAndUpdate(
+      candidate._id,
+      { token },
+      { new: true }
+    );
 
     return user;
   }

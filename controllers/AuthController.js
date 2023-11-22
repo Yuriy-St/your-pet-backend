@@ -52,11 +52,21 @@ class AuthController {
   });
 
   current = asyncHandler((req, res) => {
-    const { name, email, birthday, phone, city, avatarURL } = req.user;
+    const { user } = req;
     res.status(200).json({
       code: 200,
       message: 'OK',
-      data: { name, email, birthday, phone, city, avatarURL },
+      data: {
+        user: {
+          name: user.name,
+          email: user.email,
+          birthday: user.birthday || '',
+          phone: user.phone || '',
+          city: user.city,
+          avatarURL: user.avatarURL,
+        },
+        token: user.token,
+      },
     });
   });
 
@@ -72,13 +82,22 @@ class AuthController {
       body.avatarId = public_id ? path.parse(public_id).name : null;
     }
 
-    let { name, email, birthday, phone, city, avatarURL } =
-      await AuthService.update(user._id, body);
+    const updUser = await AuthService.update(user._id, body);
 
     res.status(200).json({
       code: 200,
       message: 'User updated successfully',
-      data: { name, email, birthday, phone, city, avatarURL },
+      data: {
+        user: {
+          name: updUser.name,
+          email: updUser.email,
+          birthday: updUser.birthday || '',
+          phone: updUser.phone || '',
+          city: updUser.city,
+          avatarURL: updUser.avatarURL,
+        },
+        token: updUser.token,
+      },
     });
   });
 }

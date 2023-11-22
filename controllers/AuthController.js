@@ -33,8 +33,8 @@ class AuthController {
         user: {
           name: user.name,
           email: user.email,
-          birthday: user.birthday,
-          phone: user.phone,
+          birthday: user.birthday || '',
+          phone: user.phone || '',
           city: user.city,
           avatarURL: user.avatarURL,
         },

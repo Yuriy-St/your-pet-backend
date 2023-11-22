@@ -26,7 +26,6 @@ const userSchema = new Schema(
         message: props =>
           `${props.value} is not correct birthday. Enter in format dd.mm.yyyy`,
       },
-      default: '',
     },
     phone: {
       type: String,
@@ -37,7 +36,6 @@ const userSchema = new Schema(
         message: props =>
           `${props.value} is not correct phone. Enter in format +000000000000`,
       },
-      default: '',
     },
     city: {
       type: String,

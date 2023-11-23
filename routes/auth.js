@@ -22,8 +22,8 @@ router.get('/current', authenticate, authController.current);
 
 router.patch(
   '/',
-  authenticate,
   validateBody(schemas.updateSchema),
+  authenticate,
   upload.single('avatar'),
   authController.update
 );

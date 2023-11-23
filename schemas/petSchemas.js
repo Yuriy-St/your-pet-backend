@@ -1,13 +1,24 @@
 const Joi = require('joi');
 
-const addPepSchema = Joi.object({
+const addPetSchema = Joi.object({
+  category: Joi.string().required(),
   name: Joi.string().required(),
-  birth: Joi.string().required(),
   type: Joi.string().required(),
+  birthDate: Joi.date().required(),
+  sex: Joi.string(),
   comments: Joi.string(),
-  petAvatarURL: Joi.string()
+});
+
+const updatePetSchema = Joi.object({
+  category: Joi.string(),
+  name: Joi.string(),
+  type: Joi.string(),
+  birthDate: Joi.date(),
+  sex: Joi.string(),
+  comments: Joi.string(),
 });
 
 module.exports = {
-  addPepSchema
+  addPetSchema,
+  updatePetSchema,
 };

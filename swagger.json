@@ -321,15 +321,7 @@
           }
         ],
         "requestBody": {
-          "description": "Pet object",
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/Pet"
-              }
-            }
-          }
+          "$ref": "#/components/requestBodies/AddPetRequest"
         },
         "responses": {
           "201": {
@@ -370,7 +362,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/Pet"
+                "$ref": "#/components/schemas/PetRequest"
               }
             }
           }
@@ -651,7 +643,7 @@
           }
         }
       },
-      "Pet": {
+      "PetRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -742,6 +734,19 @@
             "type": "string",
             "description": "Link to the image",
             "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "AddPetRequest": {
+        "description": "Pet object",
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "$ref": "#/components/schemas/PetRequest"
+            }
           }
         }
       }

@@ -16,7 +16,6 @@ router.post(
   authenticate,
   upload.single('image'),
   validateBody(schemas.addPetSchema),
-  isPetUnique,
   getImage,
   petController.add
 );

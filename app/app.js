@@ -13,12 +13,21 @@ const swaggerDocument = require('../swagger.json');
 
 const app = express();
 
-const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
+const formatsLogger = () => {
+  switch (app.get('env')) {
+    case 'development':
+      return 'dev';
+    case 'debug':
+      return 'combined';
+    default:
+      return 'short';
+  }
+};
 
 app.use('/api-docs', swaggerUi.serve);
 app.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
-app.use(logger(formatsLogger));
+app.use(logger(formatsLogger()));
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

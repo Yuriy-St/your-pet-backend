@@ -18,14 +18,8 @@ const userSchema = new Schema(
       required: [true, 'Password is required'],
     },
     birthday: {
-      type: String,
-      validate: {
-        validator: function (date) {
-          return /^\d{2}\.\d{2}\.\d{4}$/.test(date);
-        },
-        message: props =>
-          `${props.value} is not correct birthday. Enter in format dd.mm.yyyy`,
-      },
+      type: Date,
+      default: 0,
     },
     phone: {
       type: String,

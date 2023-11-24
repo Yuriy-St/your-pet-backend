@@ -16,6 +16,9 @@ const authenticate = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
+    if (err.name === 'JsonWebTokenError') {
+      return next(HttpError(401, 'Email or password is invalid'));
+    }
     next(HttpError(401, err.message));
   }
 };

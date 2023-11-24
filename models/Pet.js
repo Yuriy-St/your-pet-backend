@@ -33,6 +33,7 @@ const petSchema = new Schema(
         },
         'Birth date is required',
       ],
+      default: 0,
     },
 
     sex: {
@@ -67,7 +68,7 @@ const petSchema = new Schema(
 
     owner: {
       type: Schema.Types.ObjectId,
-      fer: 'user',
+      ref: 'user',
       required: true,
     },
 

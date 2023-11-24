@@ -338,58 +338,6 @@
             "$ref": "#/components/responses/PetDuplicateErrorResponse"
           }
         }
-      },
-      "patch": {
-        "tags": [
-          "Pets"
-        ],
-        "summary": "Update pet's data",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "name",
-            "required": true,
-            "description": "Pets name from users data-base",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "requestBody": {
-          "description": "Pets avatar file",
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/PetRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "User avatar updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CurrentUserResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthenticatedErrorResponse"
-          },
-          "500": {
-            "description": "Cannot find path of avatar file",
-            "content": {}
-          }
-        }
       }
     },
     "/api/pets/id": {
@@ -404,7 +352,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "description": "Pets id",
+            "description": "Pet's id",
             "allowEmptyValue": false,
             "schema": {
               "type": "string"
@@ -425,29 +373,38 @@
             "$ref": "#/components/responses/NotFoundErrorResponse"
           }
         }
-      },
+      }
+    },
+    "/api/pets/own": {
       "get": {
-        "summary": "Get pet",
-        "description": "Get all information about a pet",
+        "operationId": "getOwnPets",
         "tags": [
           "Pets"
         ],
-        "parameters": [],
+        "description": "Get list of all pets of the authenticated user",
         "responses": {
           "200": {
-            "description": "Ok",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddPetResponse"
+                  "$ref": "#/components/schemas/PetArrayResponse"
+                },
+                "examples": {
+                  "Success": {
+                    "$ref": "#/components/examples/PetArrayResponseExample"
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthenticatedErrorResponse"
           }
         }
       }
     },
-     "/api/news/": {
+    "/api/news/": {
       "get": {
         "operationId": "getAllNews",
         "tags": [
@@ -455,55 +412,36 @@
         ],
         "summary": "Find all news",
         "parameters": [
-            {
-              "name": "skip",
-              "in": "query",
-              "description": "number of items to skip",
-              "required": false,
-              "type": "integer",
-              "format": "int32"
-            },
-           {
-              "name": "limit",
-              "in": "query",
-              "description": "max records to return",
-              "required": false,
-              "type": "integer",
-              "format": "int32"
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "number of items to skip",
+            "schema": {
+              "type": "string"
             }
-          ], 
-         "responses": {
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "max records to return",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
           "200": {
             "description": "News successfully send",
             "content": {
-               "application/json": {
-                 "schema": {
-                  "$ref": "#/components/schemas/NewsResponse"
-                }
-            }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
               "application/json": {
-                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "number",
-                      "description": "status of request",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "error message",
-                      "example": "Not found"
-                    }
-                  }
+                "schema": {
+                  "$ref": "#/components/schemas/NewsResponse"
                 }
               }
             }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
           }
         }
       }
@@ -641,35 +579,55 @@
       "CurrentUserResponse": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "description": "User's name",
-            "example": "Anna"
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": "200"
           },
-          "email": {
+          "message": {
             "type": "string",
-            "description": "User's email",
-            "format": "email"
+            "description": "Message to display",
+            "example": "Current user data"
           },
-          "birthday": {
-            "type": "string",
-            "description": "User's birthday",
-            "example": "01.01.2000"
-          },
-          "phone": {
-            "type": "string",
-            "description": "User's phone number",
-            "example": "+380968038877"
-          },
-          "city": {
-            "type": "string",
-            "description": "User's address",
-            "example": "Kyiv"
-          },
-          "avatarURL": {
-            "type": "string",
-            "description": "User's avatar URL",
-            "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "User's name",
+                    "example": "Anna"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "User's email",
+                    "format": "email"
+                  },
+                  "birthday": {
+                    "type": "string",
+                    "description": "User's birthday",
+                    "example": "01.01.2000"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "User's phone number",
+                    "example": "+380968038877"
+                  },
+                  "city": {
+                    "type": "string",
+                    "description": "User's address",
+                    "example": "Kyiv"
+                  },
+                  "avatarURL": {
+                    "type": "string",
+                    "description": "User's avatar URL",
+                    "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -757,9 +715,14 @@
           "type"
         ]
       },
-      "AddPetResponse": {
+      "PetResponse": {
         "type": "object",
         "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Id from the DB",
+            "example": "6560afc93633634eed5adddd"
+          },
           "category": {
             "type": "string",
             "description": "Pet's category. The only value is 'own'",
@@ -802,6 +765,38 @@
           }
         }
       },
+      "PetArrayResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": "200"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message to display",
+            "example": "Ok"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "qty": {
+                "type": "integer",
+                "format": "int32",
+                "minimum": 0
+              },
+              "pets": {
+                "type": "array",
+                "minItems": 0,
+                "items": {
+                  "$ref": "#/components/schemas/PetResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "NewsResponse": {
         "type": "object",
         "properties": {
@@ -815,8 +810,8 @@
             "description": "news information",
             "example": {
               "imgUrl": "https://www.nytimes.com/images/2023/04/16/magazine/",
-              "title":  "What I Learned Dogsitting",
-              "text":  "In a city of yawning class...",
+              "title": "What I Learned Dogsitting",
+              "text": "In a city of yawning class...",
               "date": "2023-04-11T09:00:18+0000",
               "url": "https://www.nytimes.com/2023/04/11...",
               "id": "nyt://article/8d29f1fc-d146-509d-8ceb-5a5b17d7886b"
@@ -859,7 +854,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/AddPetResponse"
+              "$ref": "#/components/schemas/PetResponse"
             },
             "examples": {
               "PetAdded": {
@@ -923,24 +918,13 @@
           "ErrorName": "HttpError"
         }
       },
-      "PetRequestExample": {
-        "value": {
-          "name": "Jess",
-          "type": "cat",
-          "bithDate": "01-01-2020",
-          "sex": "female",
-          "comments": "My lovely kitty",
-          "category": "",
-          "image": "AttachedFile"
-        }
-      },
       "PetResponseExample": {
         "value": {
           "code": "200",
           "message": "Pet added successfully",
           "data": {
             "pet": {
-              "_id": "Id in the database",
+              "_id": "6560afc93633634eed5adddd",
               "name": "Jess",
               "type": "cat",
               "bithDate": "01-01-2020",
@@ -949,6 +933,37 @@
               "category": "own",
               "imageURL": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
             }
+          }
+        }
+      },
+      "PetArrayResponseExample": {
+        "value": {
+          "code": "200",
+          "message": "Ok",
+          "data": {
+            "qty": "2",
+            "pets": [
+              {
+                "_id": "6560afc93633634eed5adddd",
+                "name": "Jess",
+                "type": "cat",
+                "bithDate": "01-01-2020",
+                "sex": "female",
+                "comments": "My lovely kitty",
+                "category": "own",
+                "imageURL": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+              },
+              {
+                "_id": "6560afc93633634eed5adddd",
+                "name": "Jess",
+                "type": "cat",
+                "bithDate": "01-01-2020",
+                "sex": "female",
+                "comments": "My lovely kitty",
+                "category": "own",
+                "imageURL": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+              }
+            ]
           }
         }
       },

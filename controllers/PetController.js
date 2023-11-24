@@ -47,23 +47,43 @@ class PetController {
 
   // get all pet
   findAll = asyncHandler(async (req, res) => {
-    const { filter, paging = {}, noRes } = req;
+    const { filters, paging, noRes } = req;
     const pets = await petService.findAll({
-      filter,
-      projection: 'name category birthDate type comments imageURL',
+      filter: filters,
       options: { ...paging },
     });
 
     if (noRes) {
+      // for the case controller is called from middleware
       return pets;
     }
 
     res.status(200);
     res.json({
       code: 200,
-      message: 'Resource successfully retrieved',
+      message: 'Ok',
       qty: pets.length,
       data: {
+        pets,
+      },
+    });
+  });
+
+  // get all own user's pet
+  findAllOwn = asyncHandler(async (req, res) => {
+    const { paging } = req;
+    const { _id: owner } = req.user;
+    const pets = await petService.findAllOwn({
+      filter: { owner },
+      options: { ...paging },
+    });
+
+    res.status(200);
+    res.json({
+      code: 200,
+      message: 'Ok',
+      data: {
+        qty: pets.length,
         pets,
       },
     });
@@ -101,7 +121,7 @@ class PetController {
     });
   });
 
-  // get a single pet
+  // get a single pet by ID
   getOne = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const pet = await petService.getById(id);
@@ -111,12 +131,12 @@ class PetController {
       code: 200,
       message: 'Ok',
       data: {
-        name: updated.name,
-        birthDate: updated.birthDate,
-        sex: updated.sex,
-        type: updated.type,
-        comments: updated.comments,
-        imageURL: updated.imageURL,
+        name: pet.name,
+        birthDate: pet.birthDate,
+        sex: pet.sex,
+        type: pet.type,
+        comments: pet.comments,
+        imageURL: pet.imageURL,
       },
     });
   });

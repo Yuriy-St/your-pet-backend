@@ -1,12 +1,17 @@
 const filters = (req, res, next) => {
-  // const filter = req.query;
-  const category = req.query.category.split(',').join(' ');
-  const { _id: owner } = req.user;
+  const { filter, category } = req.query;
 
-  return {
-    owner,
-    category: category,
+  const filters = {
+    ...filter,
   };
+
+  if (category) {
+    filters.category = category;
+  }
+
+  req.filters = filters;
+
+  next();
 };
 
 module.exports = filters;

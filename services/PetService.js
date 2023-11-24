@@ -3,16 +3,23 @@ const Pet = require('../models/Pet');
 const userService = require('./AuthService');
 
 class PetService {
+  projection = 'name category birthDate type comments sex imageURL';
+
   async add(body) {
     const newPet = await Pet.create(body);
     return newPet;
   }
 
-  async findAll({ filter = null, projection = null, options = null }) {
-    const allPets = await Pet.find(filter, projection, options).populate(
+  async findAll({ filter = {}, options = {} }) {
+    const allPets = await Pet.find(filter, this.projection, options).populate(
       'owner',
       'name email phone avatarURL'
     );
+    return allPets;
+  }
+
+  async findAllOwn({ filter = {}, options = {} }) {
+    const allPets = await Pet.find(filter, this.projection, options);
     return allPets;
   }
 

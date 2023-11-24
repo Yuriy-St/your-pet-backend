@@ -485,7 +485,25 @@
           },
           "404": {
             "description": "Not found",
-            "content": {}
+            "content": {
+              "application/json": {
+                 "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "description": "status of request",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "error message",
+                      "example": "Not found"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

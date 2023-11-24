@@ -34,8 +34,8 @@ router.patch(
   '/:id',
   authenticate,
   upload.single('image'),
-  getImage,
   validateBody(schemas.updatePetSchema),
+  getImage,
   petController.update
 );
 

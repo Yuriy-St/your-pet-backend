@@ -30,7 +30,6 @@ const updateSchema = Joi.object({
   birthday: Joi.string(),
   phone: Joi.string(),
   city: Joi.string(),
-  avatar: Joi.binary(),
 });
 
 module.exports = {

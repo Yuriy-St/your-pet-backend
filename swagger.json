@@ -390,6 +390,7 @@
     },
     "/api/pets/id": {
       "delete": {
+        "operationId": "deletePet",
         "tags": [
           "Pets"
         ],
@@ -417,8 +418,7 @@
             "content": {}
           },
           "404": {
-            "description": "Pet not found",
-            "content": {}
+            "$ref": "#/components/responses/NotFoundErrorResponse"
           }
         }
       },
@@ -811,6 +811,21 @@
             }
           }
         }
+      },
+      "NotFoundErrorResponse": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "NotFound": {
+                "$ref": "#/components/examples/NotFoundErrorExample"
+              }
+            }
+          }
+        }
       }
     },
     "examples": {
@@ -859,8 +874,15 @@
       },
       "AttachedFileNotFoundErrorExample": {
         "value": {
-          "code": "400",
+          "code": "40",
           "message": "Attached file not found",
+          "ErrorName": "HttpError"
+        }
+      },
+      "NotFoundErrorExample": {
+        "value": {
+          "code": "404",
+          "message": "Not found",
           "ErrorName": "HttpError"
         }
       }

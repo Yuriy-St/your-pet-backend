@@ -4,11 +4,12 @@ const cors = require('cors');
 const authRouter = require('../routes/auth');
 const petsRouter = require('../routes/pets');
 const noticesRouter = require('../routes/notices');
+const newsRouter = require('../routes/news');
 const invalidUrlError = require('../helpers/invalidUrlError');
 const errorHandler = require('../helpers/errorHandler');
 
-const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("../swagger.json");
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../swagger.json');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(express.static('public'));
 app.use('/api/users', authRouter);
 app.use('/api/pets', petsRouter);
 app.use('/api/notices', noticesRouter);
+app.use('/api/news', newsRouter);
 app.use(invalidUrlError);
 app.use(errorHandler);
 

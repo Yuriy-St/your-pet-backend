@@ -27,6 +27,10 @@
     {
       "name": "Notices",
       "description": "Create or find notices about pets"
+    },
+    {
+      "name": "News",
+      "description": "Information about news"
     }
   ],
   "paths": {
@@ -442,6 +446,32 @@
           }
         }
       }
+    },
+     "/api/news/": {
+      "get": {
+        "operationId": "getAllNews",
+        "tags": [
+          "News"
+        ],
+        "summary": "Find all news",
+        "parameters": [], 
+         "responses": {
+          "200": {
+            "description": "News successfully send",
+            "content": {
+               "application/json": {
+                 "schema": {
+                  "$ref": "#/components/schemas/NewsResponse"
+                }
+            }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {}
+          }
+        }
+      }
     }
   },
   "components": {
@@ -734,6 +764,28 @@
             "type": "string",
             "description": "Link to the image",
             "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+          }
+        }
+      },
+      "NewsResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": 200
+          },
+          "data": {
+            "type": "object",
+            "description": "news information",
+            "example": {
+              "imgUrl": {"type": "string", "example": "https://www.nytimes.com/images/2023/04/16/magazine/16mag-LOR/16mag-LOR…"},
+              "title": {"type": "string","description": "Title of article", "example": "What I Learned Dogsitting for New York City Opulent Elite"},
+              "text": {"type": "string","description": "Description of article", "example": "In a city of yawning class inequality, some side hustles let you "},
+              "date": {"type": "string", "description": "Publication dat", "example": "2023-04-11T09:00:18+0000"},
+              "url": {"type": "string", "description": "Link to the image", "example": "https://www.nytimes.com/2023/04/11/magazine/dogsitting-rich-new-york.h…"},
+              "id": {"type": "string", "example": "nyt://article/8d29f1fc-d146-509d-8ceb-5a5b17d7886b"}
+            }
           }
         }
       }

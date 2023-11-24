@@ -13,6 +13,6 @@ const newsSchema = new Schema({
   id: { type: String, unique: true, required: true },
 });
 
-noticeSchema.post('save', handleMongooseError);
+newsSchema.post('save', handleMongooseError);
 
-module.exports = model('news', newsSchema);
+module.exports = model('new', newsSchema);

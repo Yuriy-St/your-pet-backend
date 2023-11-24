@@ -25,7 +25,7 @@ router.post(
 router.delete('/:id', authenticate, petController.remove);
 
 // get the all pet list
-router.get('/', authenticate, filters, paging, petController.findAll);
+// router.get('/', authenticate, filters, paging, petController.findAll);
 
 // get the all own pet list
 router.get('/own', authenticate, paging, petController.findAllOwn);

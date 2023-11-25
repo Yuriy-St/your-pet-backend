@@ -5,6 +5,9 @@ const authRouter = require('../routes/auth');
 const petsRouter = require('../routes/pets');
 const noticesRouter = require('../routes/notices');
 const newsRouter = require('../routes/news');
+const friendsRouter = require("../routes/friends");
+
+
 const invalidUrlError = require('../helpers/invalidUrlError');
 const errorHandler = require('../helpers/errorHandler');
 
@@ -36,6 +39,9 @@ app.use('/api/users', authRouter);
 app.use('/api/pets', petsRouter);
 app.use('/api/notices', noticesRouter);
 app.use('/api/news', newsRouter);
+app.use("/api/friends", friendsRouter);
+
+
 app.use(invalidUrlError);
 app.use(errorHandler);
 

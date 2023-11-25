@@ -130,6 +130,42 @@
         }
       }
     },
+    "/api/users/refresh": {
+      "post": {
+        "operationId": "refresh",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Refresh access token",
+        "parameters": [],
+        "requestBody": {
+          "description": "Refresh data",
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Access token refresh successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/InvalidRefreshError"
+          }
+        }
+      }
+    },
     "/api/users/logout": {
       "post": {
         "operationId": "logout",
@@ -168,33 +204,6 @@
           },
           "401": {
             "$ref": "#/components/responses/UnauthenticatedErrorResponse"
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "description": "HTTP status code",
-                      "example": "404"
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Message to display",
-                      "example": "Not Found"
-                    },
-                    "ErrorName": {
-                      "type": "string",
-                      "description": "Error name",
-                      "example": "HttpError"
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -218,27 +227,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "description": "HTTP status code",
-                      "example": "200"
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Message to display",
-                      "example": "Ok"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "user": {
-                          "$ref": "#/components/schemas/CurrentUserResponse"
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               }
             }
@@ -279,28 +268,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "description": "HTTP status code",
-                      "example": "200"
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Message to display",
-                      "example": "User updated successfully"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "user": {
-                          "type": "object",
-                          "$ref": "#/components/schemas/CurrentUserResponse"
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               }
             }
@@ -394,6 +362,45 @@
                   "Success": {
                     "$ref": "#/components/examples/PetArrayResponseExample"
                   }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthenticatedErrorResponse"
+          }
+        }
+      }
+    },
+    "/api/notices": {
+      "post": {
+        "operationId": "addNotice",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "tags": [
+          "Notices"
+        ],
+        "summary": "Add new notice",
+        "requestBody": {
+          "description": "New notice form",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/NoticeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoticeResponse"
                 }
               }
             }
@@ -519,9 +526,9 @@
             "properties": {
               "user": {
                 "type": "object",
-                "$ref": "#/components/schemas/CurrentUserResponse"
+                "$ref": "#/components/schemas/User"
               },
-              "token": {
+              "accessToken": {
                 "type": "string",
                 "description": "User's token"
               }
@@ -548,6 +555,44 @@
           }
         }
       },
+      "RefreshRequest": {
+        "type": "string",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token with body",
+            "example": "JWT-token"
+          }
+        }
+      },
+      "RefreshResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": "200"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message to display",
+            "example": "Access token refresh successfully"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "accessToken": {
+                "type": "string",
+                "description": "User's token"
+              },
+              "refreshToken": {
+                "type": "string",
+                "description": "User's token"
+              }
+            }
+          }
+        }
+      },
       "LoginResponse": {
         "type": "object",
         "properties": {
@@ -566,17 +611,56 @@
             "properties": {
               "user": {
                 "type": "object",
-                "$ref": "#/components/schemas/CurrentUserResponse"
+                "$ref": "#/components/schemas/User"
               },
-              "token": {
+              "accessToken": {
                 "type": "string",
                 "description": "User's token"
+              },
+              "refreshToken": {
+                "type": "string",
+                "description": "Refresh token"
               }
             }
           }
         }
       },
-      "CurrentUserResponse": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Anna"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "01.01.2000"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's phone number",
+            "example": "+380968038877"
+          },
+          "city": {
+            "type": "string",
+            "description": "User's address",
+            "example": "Kyiv"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar URL",
+            "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+          }
+        }
+      },
+      "UserResponse": {
         "type": "object",
         "properties": {
           "code": {
@@ -587,45 +671,14 @@
           "message": {
             "type": "string",
             "description": "Message to display",
-            "example": "Current user data"
+            "example": "User data"
           },
           "data": {
             "type": "object",
             "properties": {
               "user": {
                 "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "User's name",
-                    "example": "Anna"
-                  },
-                  "email": {
-                    "type": "string",
-                    "description": "User's email",
-                    "format": "email"
-                  },
-                  "birthday": {
-                    "type": "string",
-                    "description": "User's birthday",
-                    "example": "01.01.2000"
-                  },
-                  "phone": {
-                    "type": "string",
-                    "description": "User's phone number",
-                    "example": "+380968038877"
-                  },
-                  "city": {
-                    "type": "string",
-                    "description": "User's address",
-                    "example": "Kyiv"
-                  },
-                  "avatarURL": {
-                    "type": "string",
-                    "description": "User's avatar URL",
-                    "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
-                  }
-                }
+                "$ref": "#/components/schemas/User"
               }
             }
           }
@@ -679,7 +732,7 @@
             "description": "Pet's type",
             "example": "Scottish fold"
           },
-          "birth": {
+          "birthDate": {
             "type": "string",
             "description": "Pet's birthday",
             "example": "01-01-2020"
@@ -738,7 +791,7 @@
             "description": "Pet's type",
             "example": "Scottish fold"
           },
-          "birth": {
+          "birthDate": {
             "type": "string",
             "description": "Pet's birthday",
             "example": "01.01.2020"
@@ -818,6 +871,159 @@
             }
           }
         }
+      },
+      "NoticeRequest": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Notice category",
+            "enum": [
+              "sell",
+              "lost",
+              "found",
+              "good-hands"
+            ],
+            "example": "good-hands"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the notice",
+            "example": "The cute kitten is looking for an owner"
+          },
+          "location": {
+            "type": "string",
+            "description": "Location of the pet",
+            "example": "Zhytomyr"
+          },
+          "name": {
+            "type": "string",
+            "description": "Pet's name",
+            "example": "Jess"
+          },
+          "type": {
+            "type": "string",
+            "description": "Pet's type",
+            "example": "Scottish fold"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Pet's birthday",
+            "example": "01-01-2020"
+          },
+          "sex": {
+            "type": "string",
+            "description": "Pet's sex",
+            "enum": [
+              "male",
+              "female",
+              "other"
+            ],
+            "example": "female"
+          },
+          "comments": {
+            "type": "string",
+            "description": "Pet's description",
+            "example": "Can talk with you"
+          },
+          "image": {
+            "type": "string",
+            "format": "binary",
+            "description": "Attached image"
+          }
+        },
+        "required": [
+          "category",
+          "title",
+          "location",
+          "name",
+          "type"
+        ]
+      },
+      "NoticeResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": "200"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message to display",
+            "example": "Ok"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "notice": {
+                "type": "object",
+                "$ref": "#/components/schemas/Notice"
+              }
+            }
+          }
+        }
+      },
+      "Notice": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Notice category",
+            "enum": [
+              "sell",
+              "lost",
+              "found",
+              "good-hands"
+            ],
+            "example": "good-hands"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the notice",
+            "example": "The cute kitten is looking for an owner"
+          },
+          "location": {
+            "type": "string",
+            "description": "Location of the pet",
+            "example": "Zhytomyr"
+          },
+          "name": {
+            "type": "string",
+            "description": "Pet's name",
+            "example": "Jess"
+          },
+          "type": {
+            "type": "string",
+            "description": "Pet's type",
+            "example": "Scottish fold"
+          },
+          "birthDate": {
+            "type": "string",
+            "description": "Pet's birthday",
+            "example": "01-01-2020"
+          },
+          "sex": {
+            "type": "string",
+            "description": "Pet's sex",
+            "enum": [
+              "male",
+              "female",
+              "other"
+            ],
+            "example": "female"
+          },
+          "comments": {
+            "type": "string",
+            "description": "Pet's description",
+            "example": "Can talk with you"
+          },
+          "imageURL": {
+            "type": "string",
+            "format": "binary",
+            "description": "Link to the image"
+          }
+        }
       }
     },
     "requestBodies": {
@@ -879,6 +1085,21 @@
           }
         }
       },
+      "InvalidRefreshError": {
+        "description": "Refresh token invalid or null ib DB",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "RefreshError": {
+                "$ref": "#/components/examples/RefreshErrorExample"
+              }
+            }
+          }
+        }
+      },
       "AttachedFileNotFoundErrorResponse": {
         "description": "API response in case of no attachment found",
         "content": {
@@ -927,7 +1148,7 @@
               "_id": "6560afc93633634eed5adddd",
               "name": "Jess",
               "type": "cat",
-              "bithDate": "01-01-2020",
+              "birthDate": "01-01-2020",
               "sex": "female",
               "comments": "My lovely kitty",
               "category": "own",
@@ -947,7 +1168,7 @@
                 "_id": "6560afc93633634eed5adddd",
                 "name": "Jess",
                 "type": "cat",
-                "bithDate": "01-01-2020",
+                "birthDate": "01-01-2020",
                 "sex": "female",
                 "comments": "My lovely kitty",
                 "category": "own",
@@ -957,7 +1178,7 @@
                 "_id": "6560afc93633634eed5adddd",
                 "name": "Jess",
                 "type": "cat",
-                "bithDate": "01-01-2020",
+                "birthDate": "01-01-2020",
                 "sex": "female",
                 "comments": "My lovely kitty",
                 "category": "own",
@@ -985,6 +1206,13 @@
         "value": {
           "code": "404",
           "message": "Not found",
+          "ErrorName": "HttpError"
+        }
+      },
+      "RefreshErrorExample": {
+        "value": {
+          "code": "403",
+          "message": "Refresh token invalid",
           "ErrorName": "HttpError"
         }
       }

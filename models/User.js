@@ -42,11 +42,7 @@ const userSchema = new Schema(
     avatarId: {
       type: String,
     },
-    accessToken: {
-      type: String,
-      default: null,
-    },
-    refreshToken: {
+    token: {
       type: String,
       default: null,
     },

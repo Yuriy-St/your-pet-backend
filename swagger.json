@@ -130,42 +130,6 @@
         }
       }
     },
-    "/api/users/refresh": {
-      "post": {
-        "operationId": "refresh",
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Refresh access token",
-        "parameters": [],
-        "requestBody": {
-          "description": "Refresh data",
-          "required": true,
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/RefreshRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Access token refresh successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RefreshResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "$ref": "#/components/responses/InvalidRefreshError"
-          }
-        }
-      }
-    },
     "/api/users/logout": {
       "post": {
         "operationId": "logout",
@@ -204,6 +168,33 @@
           },
           "401": {
             "$ref": "#/components/responses/UnauthenticatedErrorResponse"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "HTTP status code",
+                      "example": "404"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message to display",
+                      "example": "Not Found"
+                    },
+                    "ErrorName": {
+                      "type": "string",
+                      "description": "Error name",
+                      "example": "HttpError"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -227,7 +218,27 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "HTTP status code",
+                      "example": "200"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message to display",
+                      "example": "Ok"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "$ref": "#/components/schemas/CurrentUserResponse"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -268,7 +279,28 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "HTTP status code",
+                      "example": "200"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message to display",
+                      "example": "User updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "$ref": "#/components/schemas/CurrentUserResponse"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -487,9 +519,9 @@
             "properties": {
               "user": {
                 "type": "object",
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/CurrentUserResponse"
               },
-              "accessToken": {
+              "token": {
                 "type": "string",
                 "description": "User's token"
               }
@@ -516,44 +548,6 @@
           }
         }
       },
-      "RefreshRequest": {
-        "type": "string",
-        "properties": {
-          "refreshToken": {
-            "type": "string",
-            "description": "Refresh token with body",
-            "example": "JWT-token"
-          }
-        }
-      },
-      "RefreshResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "description": "HTTP status code",
-            "example": "200"
-          },
-          "message": {
-            "type": "string",
-            "description": "Message to display",
-            "example": "Access token refresh successfully"
-          },
-          "data": {
-            "type": "object",
-            "properties": {
-              "accessToken": {
-                "type": "string",
-                "description": "User's token"
-              },
-              "refreshToken": {
-                "type": "string",
-                "description": "User's token"
-              }
-            }
-          }
-        }
-      },
       "LoginResponse": {
         "type": "object",
         "properties": {
@@ -572,56 +566,17 @@
             "properties": {
               "user": {
                 "type": "object",
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/CurrentUserResponse"
               },
-              "accessToken": {
+              "token": {
                 "type": "string",
                 "description": "User's token"
-              },
-              "refreshToken": {
-                "type": "string",
-                "description": "Refresh token"
               }
             }
           }
         }
       },
-      "User": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "User's name",
-            "example": "Anna"
-          },
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          },
-          "birthday": {
-            "type": "string",
-            "description": "User's birthday",
-            "example": "01.01.2000"
-          },
-          "phone": {
-            "type": "string",
-            "description": "User's phone number",
-            "example": "+380968038877"
-          },
-          "city": {
-            "type": "string",
-            "description": "User's address",
-            "example": "Kyiv"
-          },
-          "avatarURL": {
-            "type": "string",
-            "description": "User's avatar URL",
-            "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
-          }
-        }
-      },
-      "UserResponse": {
+      "CurrentUserResponse": {
         "type": "object",
         "properties": {
           "code": {
@@ -632,14 +587,45 @@
           "message": {
             "type": "string",
             "description": "Message to display",
-            "example": "User data"
+            "example": "Current user data"
           },
           "data": {
             "type": "object",
             "properties": {
               "user": {
                 "type": "object",
-                "$ref": "#/components/schemas/User"
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "User's name",
+                    "example": "Anna"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "User's email",
+                    "format": "email"
+                  },
+                  "birthday": {
+                    "type": "string",
+                    "description": "User's birthday",
+                    "example": "01.01.2000"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "User's phone number",
+                    "example": "+380968038877"
+                  },
+                  "city": {
+                    "type": "string",
+                    "description": "User's address",
+                    "example": "Kyiv"
+                  },
+                  "avatarURL": {
+                    "type": "string",
+                    "description": "User's avatar URL",
+                    "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+                  }
+                }
               }
             }
           }
@@ -893,21 +879,6 @@
           }
         }
       },
-      "InvalidRefreshError": {
-        "description": "Refresh token invalid or null ib DB",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ErrorResponse"
-            },
-            "examples": {
-              "RefreshError": {
-                "$ref": "#/components/examples/RefreshErrorExample"
-              }
-            }
-          }
-        }
-      },
       "AttachedFileNotFoundErrorResponse": {
         "description": "API response in case of no attachment found",
         "content": {
@@ -1014,13 +985,6 @@
         "value": {
           "code": "404",
           "message": "Not found",
-          "ErrorName": "HttpError"
-        }
-      },
-      "RefreshErrorExample": {
-        "value": {
-          "code": "403",
-          "message": "Refresh token invalid",
           "ErrorName": "HttpError"
         }
       }

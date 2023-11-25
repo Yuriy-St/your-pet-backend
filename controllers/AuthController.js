@@ -24,7 +24,7 @@ class AuthController {
           city: user.city,
           avatarURL: user.avatarURL,
         },
-        accessToken: user.accessToken,
+        token: user.token,
       },
     });
   });
@@ -44,20 +44,7 @@ class AuthController {
           city: user.city,
           avatarURL: user.avatarURL,
         },
-        accessToken: user.accessToken,
-        refreshToken: user.refreshToken,
-      },
-    });
-  });
-
-  refresh = asyncHandler(async (req, res) => {
-    const {accessToken, refreshToken} = await AuthService.refresh(req.body);
-    res.status(200).json({
-      code: 200,
-      message: 'Access token refresh successfully',
-      data: {
-        accessToken,
-        refreshToken,
+        token: user.token,
       },
     });
   });

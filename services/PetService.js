@@ -1,6 +1,5 @@
 const HttpError = require('../helpers/HttpError');
 const Pet = require('../models/Pet');
-const userService = require('./AuthService');
 
 class PetService {
   projection = 'name category birthDate type comments sex imageURL';

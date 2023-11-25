@@ -20,6 +20,8 @@ router.post('/logout', authenticate, authController.logout);
 
 router.get('/current', authenticate, authController.current);
 
+router.post('/refresh', validateBody(schemas.refreshSchema), authController.refresh);
+
 router.patch(
   '/',
   authenticate,

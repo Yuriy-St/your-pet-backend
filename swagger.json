@@ -37,7 +37,9 @@
     "/api/users/register": {
       "post": {
         "operationId": "register",
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "User registration",
         "parameters": [],
         "requestBody": {
@@ -95,7 +97,9 @@
     "/api/users/login": {
       "post": {
         "operationId": "login",
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "User login",
         "parameters": [],
         "requestBody": {
@@ -129,7 +133,9 @@
     "/api/users/refresh": {
       "post": {
         "operationId": "refresh",
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "Refresh access token",
         "parameters": [],
         "requestBody": {
@@ -163,7 +169,9 @@
     "/api/users/logout": {
       "post": {
         "operationId": "logout",
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "Logout user",
         "parameters": [],
         "security": [
@@ -196,33 +204,6 @@
           },
           "401": {
             "$ref": "#/components/responses/UnauthenticatedErrorResponse"
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "description": "HTTP status code",
-                      "example": "404"
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Message to display",
-                      "example": "Not Found"
-                    },
-                    "ErrorName": {
-                      "type": "string",
-                      "description": "Error name",
-                      "example": "HttpError"
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -230,7 +211,9 @@
     "/api/users/current": {
       "get": {
         "operationId": "currentUser",
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "Get info of current user",
         "parameters": [],
         "security": [
@@ -244,27 +227,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "description": "HTTP status code",
-                      "example": "200"
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Message to display",
-                      "example": "Ok"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "user": {
-                          "$ref": "#/components/schemas/CurrentUserResponse"
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               }
             }
@@ -278,7 +241,9 @@
     "/api/users/": {
       "patch": {
         "operationId": "updateUser",
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "summary": "Update user information",
         "parameters": [],
         "security": [
@@ -303,28 +268,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "description": "HTTP status code",
-                      "example": "200"
-                    },
-                    "message": {
-                      "type": "string",
-                      "description": "Message to display",
-                      "example": "User updated successfully"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "user": {
-                          "type": "object",
-                          "$ref": "#/components/schemas/CurrentUserResponse"
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               }
             }
@@ -338,7 +282,9 @@
     "/api/pets/": {
       "post": {
         "operationId": "addPet",
-        "tags": ["Pets"],
+        "tags": [
+          "Pets"
+        ],
         "summary": "Add user's pet",
         "parameters": [],
         "security": [
@@ -365,7 +311,9 @@
     "/api/pets/id": {
       "delete": {
         "operationId": "deletePet",
-        "tags": ["Pets"],
+        "tags": [
+          "Pets"
+        ],
         "summary": "Delete user pet",
         "parameters": [
           {
@@ -398,7 +346,9 @@
     "/api/pets/own": {
       "get": {
         "operationId": "getOwnPets",
-        "tags": ["Pets"],
+        "tags": [
+          "Pets"
+        ],
         "description": "Get list of all pets of the authenticated user",
         "responses": {
           "200": {
@@ -425,7 +375,9 @@
     "/api/news/": {
       "get": {
         "operationId": "getAllNews",
-        "tags": ["News"],
+        "tags": [
+          "News"
+        ],
         "summary": "Find all news",
         "parameters": [
           {
@@ -511,7 +463,11 @@
             "example": "Qwerty123"
           }
         },
-        "required": ["name", "email", "password"]
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
       },
       "RegistrationResponse": {
         "type": "object",
@@ -531,7 +487,7 @@
             "properties": {
               "user": {
                 "type": "object",
-                "$ref": "#/components/schemas/CurrentUserResponse"
+                "$ref": "#/components/schemas/User"
               },
               "accessToken": {
                 "type": "string",
@@ -543,7 +499,10 @@
       },
       "LoginRequest": {
         "type": "object",
-        "required": ["email", "password"],
+        "required": [
+          "email",
+          "password"
+        ],
         "properties": {
           "email": {
             "type": "string",
@@ -613,7 +572,7 @@
             "properties": {
               "user": {
                 "type": "object",
-                "$ref": "#/components/schemas/CurrentUserResponse"
+                "$ref": "#/components/schemas/User"
               },
               "accessToken": {
                 "type": "string",
@@ -627,7 +586,42 @@
           }
         }
       },
-      "CurrentUserResponse": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "Anna"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "birthday": {
+            "type": "string",
+            "description": "User's birthday",
+            "example": "01.01.2000"
+          },
+          "phone": {
+            "type": "string",
+            "description": "User's phone number",
+            "example": "+380968038877"
+          },
+          "city": {
+            "type": "string",
+            "description": "User's address",
+            "example": "Kyiv"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar URL",
+            "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+          }
+        }
+      },
+      "UserResponse": {
         "type": "object",
         "properties": {
           "code": {
@@ -638,45 +632,14 @@
           "message": {
             "type": "string",
             "description": "Message to display",
-            "example": "Current user data"
+            "example": "User data"
           },
           "data": {
             "type": "object",
             "properties": {
               "user": {
                 "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "User's name",
-                    "example": "Anna"
-                  },
-                  "email": {
-                    "type": "string",
-                    "description": "User's email",
-                    "format": "email"
-                  },
-                  "birthday": {
-                    "type": "string",
-                    "description": "User's birthday",
-                    "example": "01.01.2000"
-                  },
-                  "phone": {
-                    "type": "string",
-                    "description": "User's phone number",
-                    "example": "+380968038877"
-                  },
-                  "city": {
-                    "type": "string",
-                    "description": "User's address",
-                    "example": "Kyiv"
-                  },
-                  "avatarURL": {
-                    "type": "string",
-                    "description": "User's avatar URL",
-                    "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
-                  }
-                }
+                "$ref": "#/components/schemas/User"
               }
             }
           }
@@ -738,7 +701,11 @@
           "sex": {
             "type": "string",
             "description": "Pet's sex",
-            "enum": ["male", "female", "other"],
+            "enum": [
+              "male",
+              "female",
+              "other"
+            ],
             "example": "female"
           },
           "comments": {
@@ -757,7 +724,10 @@
             "description": "Attached image"
           }
         },
-        "required": ["name", "type"]
+        "required": [
+          "name",
+          "type"
+        ]
       },
       "PetResponse": {
         "type": "object",
@@ -790,7 +760,11 @@
           "sex": {
             "type": "string",
             "description": "Pet's sex",
-            "enum": ["male", "female", "other"],
+            "enum": [
+              "male",
+              "female",
+              "other"
+            ],
             "example": "female"
           },
           "comments": {

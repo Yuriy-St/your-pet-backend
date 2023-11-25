@@ -39,10 +39,10 @@ class AuthService {
     };
 
     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-      expiresIn: '1m',
+      expiresIn: '2m',
     });
     const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
-      expiresIn: '30d',
+      expiresIn: '744h',
     });
 
     const user = await User.findByIdAndUpdate(
@@ -57,10 +57,7 @@ class AuthService {
   async refresh({ refreshToken: token }) {
     try {
       const { id } = jwt.verify(token, REFRESH_SECRET_KEY);
-      // const candidate = await User.findById(id);
-      // console.log(candidate)
       const isExist = await User.findOne({refreshToken: token});
-      console.log(isExist)
       if (!isExist) {
         throw HttpError(403, 'Refresh token invalid');
       }
@@ -70,10 +67,10 @@ class AuthService {
       };
 
       const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-        expiresIn: '1m',
+        expiresIn: '2m',
       });
       const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
-        expiresIn: '30d',
+        expiresIn: '744h',
       });
 
       const user = await User.findByIdAndUpdate(

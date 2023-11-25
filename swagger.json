@@ -37,9 +37,7 @@
     "/api/users/register": {
       "post": {
         "operationId": "register",
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "User registration",
         "parameters": [],
         "requestBody": {
@@ -97,9 +95,7 @@
     "/api/users/login": {
       "post": {
         "operationId": "login",
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "User login",
         "parameters": [],
         "requestBody": {
@@ -130,12 +126,44 @@
         }
       }
     },
+    "/api/users/refresh": {
+      "post": {
+        "operationId": "refresh",
+        "tags": ["Auth"],
+        "summary": "Refresh access token",
+        "parameters": [],
+        "requestBody": {
+          "description": "Refresh data",
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Access token refresh successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/InvalidRefreshError"
+          }
+        }
+      }
+    },
     "/api/users/logout": {
       "post": {
         "operationId": "logout",
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "Logout user",
         "parameters": [],
         "security": [
@@ -202,9 +230,7 @@
     "/api/users/current": {
       "get": {
         "operationId": "currentUser",
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "Get info of current user",
         "parameters": [],
         "security": [
@@ -252,9 +278,7 @@
     "/api/users/": {
       "patch": {
         "operationId": "updateUser",
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "summary": "Update user information",
         "parameters": [],
         "security": [
@@ -314,9 +338,7 @@
     "/api/pets/": {
       "post": {
         "operationId": "addPet",
-        "tags": [
-          "Pets"
-        ],
+        "tags": ["Pets"],
         "summary": "Add user's pet",
         "parameters": [],
         "security": [
@@ -343,9 +365,7 @@
     "/api/pets/id": {
       "delete": {
         "operationId": "deletePet",
-        "tags": [
-          "Pets"
-        ],
+        "tags": ["Pets"],
         "summary": "Delete user pet",
         "parameters": [
           {
@@ -378,9 +398,7 @@
     "/api/pets/own": {
       "get": {
         "operationId": "getOwnPets",
-        "tags": [
-          "Pets"
-        ],
+        "tags": ["Pets"],
         "description": "Get list of all pets of the authenticated user",
         "responses": {
           "200": {
@@ -407,9 +425,7 @@
     "/api/news/": {
       "get": {
         "operationId": "getAllNews",
-        "tags": [
-          "News"
-        ],
+        "tags": ["News"],
         "summary": "Find all news",
         "parameters": [
           {
@@ -495,11 +511,7 @@
             "example": "Qwerty123"
           }
         },
-        "required": [
-          "name",
-          "email",
-          "password"
-        ]
+        "required": ["name", "email", "password"]
       },
       "RegistrationResponse": {
         "type": "object",
@@ -521,7 +533,7 @@
                 "type": "object",
                 "$ref": "#/components/schemas/CurrentUserResponse"
               },
-              "token": {
+              "accessToken": {
                 "type": "string",
                 "description": "User's token"
               }
@@ -531,10 +543,7 @@
       },
       "LoginRequest": {
         "type": "object",
-        "required": [
-          "email",
-          "password"
-        ],
+        "required": ["email", "password"],
         "properties": {
           "email": {
             "type": "string",
@@ -545,6 +554,44 @@
             "type": "string",
             "description": "User's password",
             "example": "Qwerty123"
+          }
+        }
+      },
+      "RefreshRequest": {
+        "type": "string",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token with body",
+            "example": "JWT-token"
+          }
+        }
+      },
+      "RefreshResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": "200"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message to display",
+            "example": "Access token refresh successfully"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "accessToken": {
+                "type": "string",
+                "description": "User's token"
+              },
+              "refreshToken": {
+                "type": "string",
+                "description": "User's token"
+              }
+            }
           }
         }
       },
@@ -568,9 +615,13 @@
                 "type": "object",
                 "$ref": "#/components/schemas/CurrentUserResponse"
               },
-              "token": {
+              "accessToken": {
                 "type": "string",
                 "description": "User's token"
+              },
+              "refreshToken": {
+                "type": "string",
+                "description": "Refresh token"
               }
             }
           }
@@ -687,11 +738,7 @@
           "sex": {
             "type": "string",
             "description": "Pet's sex",
-            "enum": [
-              "male",
-              "female",
-              "other"
-            ],
+            "enum": ["male", "female", "other"],
             "example": "female"
           },
           "comments": {
@@ -710,10 +757,7 @@
             "description": "Attached image"
           }
         },
-        "required": [
-          "name",
-          "type"
-        ]
+        "required": ["name", "type"]
       },
       "PetResponse": {
         "type": "object",
@@ -746,11 +790,7 @@
           "sex": {
             "type": "string",
             "description": "Pet's sex",
-            "enum": [
-              "male",
-              "female",
-              "other"
-            ],
+            "enum": ["male", "female", "other"],
             "example": "female"
           },
           "comments": {
@@ -879,6 +919,21 @@
           }
         }
       },
+      "InvalidRefreshError": {
+        "description": "Refresh token invalid or null ib DB",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "RefreshError": {
+                "$ref": "#/components/examples/RefreshErrorExample"
+              }
+            }
+          }
+        }
+      },
       "AttachedFileNotFoundErrorResponse": {
         "description": "API response in case of no attachment found",
         "content": {
@@ -985,6 +1040,13 @@
         "value": {
           "code": "404",
           "message": "Not found",
+          "ErrorName": "HttpError"
+        }
+      },
+      "RefreshErrorExample": {
+        "value": {
+          "code": "403",
+          "message": "Refresh token invalid",
           "ErrorName": "HttpError"
         }
       }

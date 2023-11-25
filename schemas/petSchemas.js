@@ -1,10 +1,10 @@
-const Joi = require('joi');
+const Joi = require('joi').extend(require('@joi/date'));
 
 const addPetSchema = Joi.object({
   category: Joi.string().required(),
   name: Joi.string().required(),
   type: Joi.string().required(),
-  birthDate: Joi.date().required(),
+  birthDate: Joi.date().format(['DD-MM-YYYY']).required(),
   sex: Joi.string(),
   comments: Joi.string(),
 });

@@ -6,7 +6,7 @@ const addPetSchema = Joi.object({
   type: Joi.string().required(),
   birthDate: Joi.date().required(),
   sex: Joi.string(),
-  comments: Joi.string(),
+  comments: Joi.string().allow(''),
 });
 
 const updatePetSchema = Joi.object({

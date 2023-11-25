@@ -9,7 +9,7 @@ class FriendController {
         filter: filters,
         options: { ...paging },
       },
-      '-createAt -updateAt'
+      '-createdAt -updatedAt'
     );
 
     res.status(200);

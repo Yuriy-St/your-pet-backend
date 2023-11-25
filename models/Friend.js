@@ -21,15 +21,7 @@ const friendSchema = new Schema(
     },
     address: { type: String, default: null },
     workDays: {
-      type: [
-        { isOpen: Boolean },
-        { isOpen: Boolean },
-        { isOpen: Boolean },
-        { isOpen: Boolean },
-        { isOpen: Boolean },
-        { isOpen: Boolean, from: { type: String }, to: { type: String } },
-        { isOpen: Boolean, from: { type: String }, to: { type: String } },
-      ],
+      type: [{ isOpen: Boolean, from: { type: String }, to: { type: String } }],
       default: null,
     },
 

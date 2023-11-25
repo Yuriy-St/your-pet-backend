@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const friendController = require('../controllers/FriendsController');
-friendController;
+const filters = require('../middleware/filters');
+const paging = require('../middleware/paging');
 
-router.get('/', friendController.getAll);
+router.get('/', filters, paging, friendController.getAll);
 
 module.exports = router;

@@ -17,7 +17,6 @@ class FileController {
 
   delete = async id => {
     const response = await cloudinaryService.deleteImage(id);
-
     return response;
   };
 }

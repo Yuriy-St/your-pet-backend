@@ -21,17 +21,22 @@
       "description": "Authorization endpoints"
     },
     {
+      "name": "Pets",
+      "description": "Users' pets endpoints"
+    },
+    {
       "name": "Notices",
       "description": "Create or find notices about pets"
     },
     {
-      "name": "Pets",
-      "description": "Add users pet endpoints"
+      "name": "News",
+      "description": "Information about news"
     }
   ],
   "paths": {
     "/api/users/register": {
       "post": {
+        "operationId": "register",
         "tags": [
           "Auth"
         ],
@@ -61,13 +66,37 @@
           },
           "409": {
             "description": "Email in use",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "HTTP status code",
+                      "example": "409"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message to display",
+                      "example": "Email in use"
+                    },
+                    "ErrorName": {
+                      "type": "string",
+                      "description": "Error name",
+                      "example": "HttpError"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/users/login": {
       "post": {
+        "operationId": "login",
         "tags": [
           "Auth"
         ],
@@ -96,14 +125,14 @@
             }
           },
           "401": {
-            "description": "Email or password is invalid",
-            "content": {}
+            "$ref": "#/components/responses/UnauthenticatedErrorResponse"
           }
         }
       }
     },
     "/api/users/logout": {
       "post": {
+        "operationId": "logout",
         "tags": [
           "Auth"
         ],
@@ -117,17 +146,62 @@
         "responses": {
           "200": {
             "description": "User logged out successfully",
-            "content": {}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "HTTP status code",
+                      "example": "200"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message to display",
+                      "example": "User logged out successfully"
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {}
+            "$ref": "#/components/responses/UnauthenticatedErrorResponse"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "HTTP status code",
+                      "example": "404"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message to display",
+                      "example": "Not Found"
+                    },
+                    "ErrorName": {
+                      "type": "string",
+                      "description": "Error name",
+                      "example": "HttpError"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/users/current": {
       "get": {
+        "operationId": "currentUser",
         "tags": [
           "Auth"
         ],
@@ -144,20 +218,40 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentUserResponse"
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "HTTP status code",
+                      "example": "200"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message to display",
+                      "example": "Ok"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "$ref": "#/components/schemas/CurrentUserResponse"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "401": {
-            "description": "Email or password is invalid",
-            "content": {}
+            "$ref": "#/components/responses/UnauthenticatedErrorResponse"
           }
         }
       }
     },
     "/api/users/": {
       "patch": {
+        "operationId": "updateUser",
         "tags": [
           "Auth"
         ],
@@ -174,39 +268,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "User's name",
-                    "example": "Denis"
-                  },
-                  "email": {
-                    "type": "string",
-                    "description": "User's email",
-                    "format": "email"
-                  },
-                  "birthday": {
-                    "type": "string",
-                    "description": "User's birthday",
-                    "example": "01.01.2000"
-                  },
-                  "phone": {
-                    "type": "string",
-                    "description": "User's phone number",
-                    "example": "+380968038877"
-                  },
-                  "city": {
-                    "type": "string",
-                    "description": "User's address",
-                    "example": "Kyiv"
-                  },
-                  "avatar": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "Attached image"
-                  }
-                }
+                "$ref": "#/components/schemas/UserUpdateRequest"
               }
             }
           }
@@ -219,9 +281,24 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "user": {
+                    "code": {
+                      "type": "integer",
+                      "description": "HTTP status code",
+                      "example": "200"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Message to display",
+                      "example": "User updated successfully"
+                    },
+                    "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/CurrentUserResponse"
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "$ref": "#/components/schemas/CurrentUserResponse"
+                        }
+                      }
                     }
                   }
                 }
@@ -229,18 +306,18 @@
             }
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {}
+            "$ref": "#/components/responses/UnauthenticatedErrorResponse"
           }
         }
       }
     },
-    "/api/pets/add-pet": {
+    "/api/pets/": {
       "post": {
+        "operationId": "addPet",
         "tags": [
           "Pets"
         ],
-        "summary": "Add users pet",
+        "summary": "Add user's pet",
         "parameters": [],
         "security": [
           {
@@ -248,47 +325,38 @@
           }
         ],
         "requestBody": {
-          "description": "Pet object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PetSchema"
-              }
-            }
-          }
+          "$ref": "#/components/requestBodies/AddPetRequest"
         },
         "responses": {
           "201": {
-            "description": "Pet add successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PetSchema"
-                }
-              }
-            }
+            "$ref": "#/components/responses/PetAddedResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthenticatedErrorResponse"
           },
           "409": {
-            "description": "Pet is already added",
-            "content": {}
+            "$ref": "#/components/responses/PetDuplicateErrorResponse"
           }
         }
       }
     },
-    "/api/pets/del-pet/{name}": {
-      "post": {
+    "/api/pets/id": {
+      "delete": {
+        "operationId": "deletePet",
         "tags": [
           "Pets"
         ],
         "summary": "Delete user pet",
         "parameters": [
           {
+            "name": "id",
             "in": "path",
-            "name": "name",
             "required": true,
-            "type": "string",
-            "description": "Pets name from users data-base"
+            "description": "Pet's id",
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "security": [
@@ -296,86 +364,120 @@
             "Bearer": []
           }
         ],
-        "requestBody": {
-          "description": "Pet object",
-          "required": true,
-          "content": {}
-        },
         "responses": {
           "200": {
-            "description": "Pet successfully delete",
+            "description": "Pet successfully deleted",
             "content": {}
           },
           "404": {
-            "description": "Pet not found",
-            "content": {}
+            "$ref": "#/components/responses/NotFoundErrorResponse"
           }
         }
       }
     },
-    "/api/pets/pet-photo/{name}": {
-      "patch": {
+    "/api/pets/own": {
+      "get": {
+        "operationId": "getOwnPets",
         "tags": [
           "Pets"
         ],
-        "summary": "Update pets avatar",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "type": "string",
-            "description": "Pets name from users data-base"
-          }
-        ],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "requestBody": {
-          "description": "Pets avatar file",
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/ImageRequest"
-              }
-            }
-          }
-        },
+        "description": "Get list of all pets of the authenticated user",
         "responses": {
           "200": {
-            "description": "User avatar updated successfully",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CurrentUserResponse"
+                  "$ref": "#/components/schemas/PetArrayResponse"
+                },
+                "examples": {
+                  "Success": {
+                    "$ref": "#/components/examples/PetArrayResponseExample"
+                  }
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {}
+            "$ref": "#/components/responses/UnauthenticatedErrorResponse"
+          }
+        }
+      }
+    },
+    "/api/news/": {
+      "get": {
+        "operationId": "getAllNews",
+        "tags": [
+          "News"
+        ],
+        "summary": "Find all news",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "number of items to skip",
+            "schema": {
+              "type": "string"
+            }
           },
-          "500": {
-            "description": "Cannot find path of avatar file",
-            "content": {}
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "max records to return",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "News successfully send",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
           }
         }
       }
     }
   },
   "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": "401"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message to display",
+            "example": "Email or password is invalid"
+          },
+          "ErrorName": {
+            "type": "string",
+            "description": "Error name",
+            "example": "HttpError"
+          }
+        }
+      },
       "RegistrationRequest": {
         "type": "object",
-        "required": [
-          "name",
-          "email",
-          "password"
-        ],
         "properties": {
           "name": {
             "type": "string",
@@ -392,33 +494,38 @@
             "description": "User's password",
             "example": "Qwerty123"
           }
-        }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
       },
       "RegistrationResponse": {
         "type": "object",
         "properties": {
-          "user": {
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": "200"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message to display",
+            "example": "User registered successfully."
+          },
+          "data": {
+            "type": "object",
             "properties": {
-              "name": {
-                "type": "string",
-                "description": "User's name",
-                "example": "Anna"
+              "user": {
+                "type": "object",
+                "$ref": "#/components/schemas/CurrentUserResponse"
               },
-              "email": {
+              "token": {
                 "type": "string",
-                "description": "User's email",
-                "format": "email"
-              },
-              "avatarURL": {
-                "type": "string",
-                "description": "User's avatar",
-                "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+                "description": "User's token"
               }
             }
-          },
-          "token": {
-            "type": "string",
-            "description": "User's token"
           }
         }
       },
@@ -444,48 +551,83 @@
       "LoginResponse": {
         "type": "object",
         "properties": {
-          "user": {
-            "$ref": "#/components/schemas/CurrentUserResponse"
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": "200"
           },
-          "token": {
+          "message": {
             "type": "string",
-            "description": "Bearer token",
-            "format": "token"
+            "description": "Message to display",
+            "example": "User logged in successfully"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "$ref": "#/components/schemas/CurrentUserResponse"
+              },
+              "token": {
+                "type": "string",
+                "description": "User's token"
+              }
+            }
           }
         }
       },
       "CurrentUserResponse": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "description": "User's name",
-            "example": "Anna"
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": "200"
           },
-          "email": {
+          "message": {
             "type": "string",
-            "description": "User's email",
-            "format": "email"
+            "description": "Message to display",
+            "example": "Current user data"
           },
-          "birthday": {
-            "type": "string",
-            "description": "User's birthday",
-            "example": "01.01.2000"
-          },
-          "phone": {
-            "type": "string",
-            "description": "User's phone number",
-            "example": "+380968038877"
-          },
-          "city": {
-            "type": "string",
-            "description": "User's address",
-            "example": "Kyiv"
-          },
-          "avatarURL": {
-            "type": "string",
-            "description": "User's avatar URL",
-            "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "User's name",
+                    "example": "Anna"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "User's email",
+                    "format": "email"
+                  },
+                  "birthday": {
+                    "type": "string",
+                    "description": "User's birthday",
+                    "example": "01.01.2000"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "User's phone number",
+                    "example": "+380968038877"
+                  },
+                  "city": {
+                    "type": "string",
+                    "description": "User's address",
+                    "example": "Kyiv"
+                  },
+                  "avatarURL": {
+                    "type": "string",
+                    "description": "User's avatar URL",
+                    "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -515,7 +657,7 @@
           "city": {
             "type": "string",
             "description": "User's address",
-            "example": "Kiev"
+            "example": "Kyiv"
           },
           "avatar": {
             "type": "string",
@@ -524,17 +666,7 @@
           }
         }
       },
-      "ImageRequest": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "format": "int32",
-            "example": "/avatars/user123_avatar.jpg"
-          }
-        }
-      },
-      "PetSchema": {
+      "PetRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -550,26 +682,311 @@
           "birth": {
             "type": "string",
             "description": "Pet's birthday",
-            "example": "01.01.2020"
+            "example": "01-01-2020"
+          },
+          "sex": {
+            "type": "string",
+            "description": "Pet's sex",
+            "enum": [
+              "male",
+              "female",
+              "other"
+            ],
+            "example": "female"
           },
           "comments": {
             "type": "string",
             "description": "Pet's description",
             "example": "Can talk with you"
           },
-          "petAvatarURL": {
+          "category": {
             "type": "string",
-            "description": "Pet's avatar",
-            "example": "https://res.cloudinary.com/dfltmvg4t/image/pet.jpg"
+            "description": "Pet's category. The only and default value is 'own'",
+            "example": "own"
+          },
+          "image": {
+            "type": "string",
+            "format": "binary",
+            "description": "Attached image"
+          }
+        },
+        "required": [
+          "name",
+          "type"
+        ]
+      },
+      "PetResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Id from the DB",
+            "example": "6560afc93633634eed5adddd"
+          },
+          "category": {
+            "type": "string",
+            "description": "Pet's category. The only value is 'own'",
+            "example": "own"
+          },
+          "name": {
+            "type": "string",
+            "description": "Pet's name",
+            "example": "Jess"
+          },
+          "type": {
+            "type": "string",
+            "description": "Pet's type",
+            "example": "Scottish fold"
+          },
+          "birth": {
+            "type": "string",
+            "description": "Pet's birthday",
+            "example": "01.01.2020"
+          },
+          "sex": {
+            "type": "string",
+            "description": "Pet's sex",
+            "enum": [
+              "male",
+              "female",
+              "other"
+            ],
+            "example": "female"
+          },
+          "comments": {
+            "type": "string",
+            "description": "Pet's description",
+            "example": "Can talk with you"
+          },
+          "imageURL": {
+            "type": "string",
+            "description": "Link to the image",
+            "example": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+          }
+        }
+      },
+      "PetArrayResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": "200"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message to display",
+            "example": "Ok"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "qty": {
+                "type": "integer",
+                "format": "int32",
+                "minimum": 0
+              },
+              "pets": {
+                "type": "array",
+                "minItems": 0,
+                "items": {
+                  "$ref": "#/components/schemas/PetResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NewsResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": 200
+          },
+          "data": {
+            "type": "object",
+            "description": "news information",
+            "example": {
+              "imgUrl": "https://www.nytimes.com/images/2023/04/16/magazine/",
+              "title": "What I Learned Dogsitting",
+              "text": "In a city of yawning class...",
+              "date": "2023-04-11T09:00:18+0000",
+              "url": "https://www.nytimes.com/2023/04/11...",
+              "id": "nyt://article/8d29f1fc-d146-509d-8ceb-5a5b17d7886b"
+            }
           }
         }
       }
     },
-    "securitySchemes": {
-      "Bearer": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+    "requestBodies": {
+      "AddPetRequest": {
+        "description": "Pet object",
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "$ref": "#/components/schemas/PetRequest"
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "UnauthenticatedErrorResponse": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "Unauthorized": {
+                "$ref": "#/components/examples/UnauthenticatedErrorExample"
+              }
+            }
+          }
+        }
+      },
+      "PetAddedResponse": {
+        "description": "API response if pet was added successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PetResponse"
+            },
+            "examples": {
+              "PetAdded": {
+                "$ref": "#/components/examples/PetResponseExample"
+              }
+            }
+          }
+        }
+      },
+      "PetDuplicateErrorResponse": {
+        "description": "Conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "PetDuplicated": {
+                "$ref": "#/components/examples/PetDuplicateErrorExample"
+              }
+            }
+          }
+        }
+      },
+      "AttachedFileNotFoundErrorResponse": {
+        "description": "API response in case of no attachment found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "Unauthorized": {
+                "$ref": "#/components/examples/AttachedFileNotFoundErrorExample"
+              }
+            }
+          }
+        }
+      },
+      "NotFoundErrorResponse": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "examples": {
+              "NotFound": {
+                "$ref": "#/components/examples/NotFoundErrorExample"
+              }
+            }
+          }
+        }
+      }
+    },
+    "examples": {
+      "UnauthenticatedErrorExample": {
+        "value": {
+          "code": "401",
+          "message": "Email or password is invalid",
+          "ErrorName": "HttpError"
+        }
+      },
+      "PetResponseExample": {
+        "value": {
+          "code": "200",
+          "message": "Pet added successfully",
+          "data": {
+            "pet": {
+              "_id": "6560afc93633634eed5adddd",
+              "name": "Jess",
+              "type": "cat",
+              "bithDate": "01-01-2020",
+              "sex": "female",
+              "comments": "My lovely kitty",
+              "category": "own",
+              "imageURL": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+            }
+          }
+        }
+      },
+      "PetArrayResponseExample": {
+        "value": {
+          "code": "200",
+          "message": "Ok",
+          "data": {
+            "qty": "2",
+            "pets": [
+              {
+                "_id": "6560afc93633634eed5adddd",
+                "name": "Jess",
+                "type": "cat",
+                "bithDate": "01-01-2020",
+                "sex": "female",
+                "comments": "My lovely kitty",
+                "category": "own",
+                "imageURL": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+              },
+              {
+                "_id": "6560afc93633634eed5adddd",
+                "name": "Jess",
+                "type": "cat",
+                "bithDate": "01-01-2020",
+                "sex": "female",
+                "comments": "My lovely kitty",
+                "category": "own",
+                "imageURL": "https://res.cloudinary.com/dfltmvg4t/image/upload/v1700298149/avatars/placeholder.jpg"
+              }
+            ]
+          }
+        }
+      },
+      "PetDuplicateErrorExample": {
+        "value": {
+          "code": "409",
+          "message": "You already have a pet with that name",
+          "ErrorName": "HttpError"
+        }
+      },
+      "AttachedFileNotFoundErrorExample": {
+        "value": {
+          "code": "40",
+          "message": "Attached file not found",
+          "ErrorName": "HttpError"
+        }
+      },
+      "NotFoundErrorExample": {
+        "value": {
+          "code": "404",
+          "message": "Not found",
+          "ErrorName": "HttpError"
+        }
       }
     }
   }

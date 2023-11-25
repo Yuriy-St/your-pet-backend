@@ -5,20 +5,26 @@ const fileController = require('./FileController');
 
 class AuthController {
   register = asyncHandler(async (req, res) => {
-    const { name, email, birthday, phone, city, avatarURL } =
-      await AuthService.register({
-        ...req.body,
-        avatarURL: process.env.AVATAR_DEFAULT_URL,
-        avatarId: `${req.body.name}_${Date.now()}`,
-      });
-    const { token } = await AuthService.login(req.body);
+    await AuthService.register({
+      ...req.body,
+      avatarURL: process.env.AVATAR_DEFAULT_URL,
+      avatarId: `${req.body.name}_${Date.now()}`,
+    });
+    const user = await AuthService.login(req.body);
 
     res.status(201).json({
       code: 201,
       message: 'User registered successfully.',
       data: {
-        user: { name, email, avatarURL },
-        token,
+        user: {
+          name: user.name,
+          email: user.email,
+          birthday: user.birthday || '',
+          phone: user.phone || '',
+          city: user.city,
+          avatarURL: user.avatarURL,
+        },
+        token: user.token,
       },
     });
   });
@@ -65,7 +71,6 @@ class AuthController {
           city: user.city,
           avatarURL: user.avatarURL,
         },
-        token: user.token,
       },
     });
   });
@@ -96,7 +101,6 @@ class AuthController {
           city: updUser.city,
           avatarURL: updUser.avatarURL,
         },
-        token: updUser.token,
       },
     });
   });

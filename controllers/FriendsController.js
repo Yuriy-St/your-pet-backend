@@ -3,14 +3,10 @@ const friendService = require('../services/FriendsService');
 
 class FriendController {
   getAll = asyncHandler(async (req, res) => {
-    const { filters, paging } = req;
-    const friends = await friendService.findAll(
-      {
-        filter: filters,
-        options: { ...paging },
-      },
-      '-createdAt -updatedAt'
-    );
+    const { paging } = req;
+    const friends = await friendService.findAll({
+      options: { ...paging },
+    });
 
     res.status(200);
     res.json({

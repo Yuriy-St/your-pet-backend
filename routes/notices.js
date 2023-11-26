@@ -24,12 +24,6 @@ router.post(
 router.delete('/:id', authenticate, isValidId, noticeController.remove);
 
 // get the own notices list
-router.get(
-  '/query',
-  authenticate,
-  filters,
-  paging,
-  noticeController.getFilteredList
-);
+router.get('/own', authenticate, filters, paging, noticeController.findAllOwn);
 
 module.exports = router;

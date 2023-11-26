@@ -17,9 +17,18 @@ class PetService {
     return allPets;
   }
 
-  async findAllOwn({ filter = {}, options = {} }) {
-    const allPets = await Pet.find(filter, this.projection, options);
-    return allPets;
+  async findAllOwnPets({ owner, options = {} }) {
+    const ownPets = await Pet.find({ owner }, this.projection, options)
+      .where('category')
+      .equals('own');
+    return ownPets;
+  }
+
+  async findAllOwnNotices({ owner, options = {} }) {
+    const ownNotices = await Pet.find({ owner }, this.projection, options)
+      .where('category')
+      .in(['sell', 'lost', 'found', 'good-hands']);
+    return ownNotices;
   }
 
   async getById(id, projection = null) {

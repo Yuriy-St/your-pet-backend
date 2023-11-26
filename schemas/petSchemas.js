@@ -1,21 +1,21 @@
 const Joi = require('joi').extend(require('@joi/date'));
 
 const addPetSchema = Joi.object({
-  category: Joi.string().required(),
-  name: Joi.string().required(),
-  type: Joi.string().required(),
-  birthDate: Joi.date().format(['DD-MM-YYYY']).required(),
-  sex: Joi.string(),
-  comments: Joi.string().allow(''),
+  category: Joi.string().valid('own').required(),
+  name: Joi.string().min(2).max(16).required(),
+  type: Joi.string().min(2).max(16).required(),
+  birthDate: Joi.date().format(['DD-MM-YYYY']),
+  sex: Joi.string().valid('male', 'female').optional(),
+  comments: Joi.string().max(120).optional(),
 });
 
 const updatePetSchema = Joi.object({
-  category: Joi.string(),
-  name: Joi.string(),
-  type: Joi.string(),
-  birthDate: Joi.date(),
-  sex: Joi.string(),
-  comments: Joi.string(),
+  category: Joi.string().valid('own'),
+  name: Joi.string().min(2).max(16),
+  type: Joi.string().min(2).max(16),
+  birthDate: Joi.date().format(['DD-MM-YYYY']),
+  sex: Joi.string().valid('male', 'female'),
+  comments: Joi.string().max(120),
 });
 
 module.exports = {

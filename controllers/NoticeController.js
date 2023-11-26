@@ -35,6 +35,8 @@ class NoticeController {
   remove = asyncHandler(async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
+    const { imageId } = await petService.getById(id, 'imageId');
+    await fileController.delete(imageId);
     await petService.remove({ id, owner });
 
     res.status(200).json({

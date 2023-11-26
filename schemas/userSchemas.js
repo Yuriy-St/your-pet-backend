@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('joi').extend(require('@joi/date'));
 
 const registerSchema = Joi.object({
   name: Joi.string().required(),
@@ -27,7 +27,7 @@ const updateSchema = Joi.object({
     minDomainSegments: 2,
     tlds: false,
   }),
-  birthday: Joi.string(),
+  birthday: Joi.date().format(['DD-MM-YYYY']),
   phone: Joi.string(),
   city: Joi.string(),
 });

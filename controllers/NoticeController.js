@@ -67,13 +67,39 @@ class NoticeController {
 
   // get own notice list
   getFilteredList = asyncHandler(async (req, res) => {
-    const { filter, paging } = req;
-    const data = await petService.getAll(filter, { ...paging });
+    const { filters, paging } = req;
+    // TODO: make settings for filtering only notices
+    const notices = await petService.findAll({
+      filter: filters,
+      options: { ...paging },
+    });
     res.status(200).json({
       code: 200,
       message: 'ok',
       qty: data.length,
-      data,
+      data: {
+        notices,
+      },
+    });
+  });
+
+  // get all own user's notices
+  findAllOwn = asyncHandler(async (req, res) => {
+    const { paging } = req;
+    const { _id: owner } = req.user;
+    const pets = await petService.findAllOwnNotices({
+      owner,
+      options: { ...paging },
+    });
+
+    res.status(200);
+    res.json({
+      code: 200,
+      message: 'Ok',
+      data: {
+        qty: pets.length,
+        pets,
+      },
     });
   });
 

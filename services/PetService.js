@@ -31,6 +31,11 @@ class PetService {
     return ownNotices;
   }
 
+  async findNoticesByCategory({ filter = {}, options = {} }) {
+    const notices = await Pet.find(filter, this.projection, options);
+    return notices;
+  }
+
   async getById(id, projection = null) {
     const candidate = await Pet.findById(id, projection);
     if (!candidate) {

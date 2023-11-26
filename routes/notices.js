@@ -24,6 +24,9 @@ router.post(
 router.delete('/:id', authenticate, isValidId, noticeController.remove);
 
 // get the own notices list
-router.get('/own', authenticate, filters, paging, noticeController.findAllOwn);
+router.get('/own', authenticate, paging, noticeController.findAllOwn);
+
+// get the notices list by category
+router.get('/:category', authenticate, paging, noticeController.findByCategory);
 
 module.exports = router;

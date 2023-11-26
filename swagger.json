@@ -449,6 +449,7 @@
     "/api/news/": {
       "get": {
         "operationId": "getAllNews",
+        "description": "Get list of all news",
         "tags": [
           "News"
         ],
@@ -456,16 +457,24 @@
         "parameters": [
           {
             "name": "skip",
-            "in": "query",
+            "in": "path",
             "description": "number of items to skip",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           },
           {
             "name": "limit",
-            "in": "query",
+            "in": "path",
             "description": "max records to return",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "q",
+            "in": "path",
+            "description": "filter for seeking",
             "schema": {
               "type": "string"
             }

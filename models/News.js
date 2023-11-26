@@ -6,7 +6,10 @@ const newsSchema = new Schema({
     type: String,
     required: [true, 'This title is required'],
   },
-  title: String,
+  title: {
+    type: String,
+    required: true,
+  },
   text: String,
   date: String,
   url: String,

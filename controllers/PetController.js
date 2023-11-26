@@ -75,8 +75,8 @@ class PetController {
   findAllOwn = asyncHandler(async (req, res) => {
     const { paging } = req;
     const { _id: owner } = req.user;
-    const pets = await petService.findAllOwn({
-      filter: { owner },
+    const pets = await petService.findAllOwnPets({
+      owner,
       options: { ...paging },
     });
 

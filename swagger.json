@@ -456,9 +456,9 @@
         "summary": "Find all news",
         "parameters": [
           {
-            "name": "skip",
+            "name": "page",
             "in": "path",
-            "description": "number of items to skip",
+            "description": "number of page",
             "schema": {
               "type": "number"
             }

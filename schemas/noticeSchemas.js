@@ -15,7 +15,11 @@ const addNoticeSchema = Joi.object({
     then: Joi.number().greater(0).required(),
     otherwise: Joi.number().allow('').optional(),
   }),
-  name: Joi.string().min(2).max(16).required(),
+  name: Joi.alternatives().conditional('category', {
+    not: 'found',
+    then: Joi.string().min(2).max(16).required(),
+    otherwise: Joi.string().allow('').optional(),
+  }),
   type: Joi.string().min(2).max(16).required(),
   birthDate: Joi.alternatives().conditional('category', {
     not: 'found',
@@ -23,30 +27,30 @@ const addNoticeSchema = Joi.object({
     otherwise: Joi.date().allow('').optional(),
   }),
   sex: Joi.string().valid('male', 'female').required(),
-  comments: Joi.string().max(120).optional(),
+  comments: Joi.string().max(120).allow('').optional(),
 });
 
 const updateNoticeSchema = Joi.object({
-  category: Joi.string().valid('sell', 'lost', 'found', 'good-hands'),
+  category: Joi.string().valid('sell', 'lost', 'found', 'good-hands').allow(''),
   location: Joi.alternatives().conditional('category', {
     is: 'sell',
     then: Joi.string().required(),
-    otherwise: Joi.string().allow('').optional(),
+    otherwise: Joi.string().allow(''),
   }),
   price: Joi.alternatives().conditional('category', {
     is: 'sell',
     then: Joi.number().greater(0),
-    otherwise: Joi.number().allow('').optional(),
+    otherwise: Joi.number().allow(''),
   }),
-  name: Joi.string().min(2).max(16),
-  type: Joi.string().min(2).max(16),
+  name: Joi.string().min(2).max(16).allow(''),
+  type: Joi.string().min(2).max(16).allow(''),
   birthDate: Joi.alternatives().conditional('category', {
     not: 'found',
-    then: Joi.date().format(['DD-MM-YYYY']).optional(),
-    otherwise: Joi.date().allow('').optional(),
+    then: Joi.date().format(['DD-MM-YYYY']),
+    otherwise: Joi.date().allow(''),
   }),
-  sex: Joi.string().valid('male', 'female'),
-  comments: Joi.string().max(120).optional(),
+  sex: Joi.string().valid('male', 'female').allow(''),
+  comments: Joi.string().max(120).allow(''),
 });
 
 module.exports = {

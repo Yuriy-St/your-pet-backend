@@ -3,7 +3,7 @@ const petService = require('../services/PetService');
 const fs = require('fs/promises');
 const path = require('path');
 const fileController = require('./FileController');
-const HttpError = require('../helpers/HttpError');
+const parse = require('date-fns/parse');
 
 class NoticeController {
   // add by user
@@ -11,6 +11,7 @@ class NoticeController {
     const { _id: owner } = req.user;
     const newNotice = await petService.add({
       ...req.body,
+      birthDate: parse(req.body.birthDate, 'dd-MM-yyyy', new Date()),
       owner,
     });
 

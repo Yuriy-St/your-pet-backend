@@ -1,9 +1,8 @@
 const asyncHandler = require('../helpers/asyncHandler');
 const petService = require('../services/PetService');
-const fs = require('fs/promises');
 const path = require('path');
 const fileController = require('./FileController');
-const HttpError = require('../helpers/HttpError');
+const { parse } = require('date-fns');
 
 class PetController {
   // add by user
@@ -11,6 +10,7 @@ class PetController {
     const { _id: owner } = req.user;
     const newPet = await petService.add({
       ...req.body,
+      birthDate: parse(req.body.birthDate, 'dd-MM-yyyy', new Date()),
       owner,
     });
 
@@ -96,6 +96,9 @@ class PetController {
     const { id } = req.params;
     const pet = petService.getById(id);
     const { user, body, file } = req;
+    if (body?.birthDate) {
+      body.birthDate = parse(body.birthDate, 'dd-MM-yyyy', new Date());
+    }
     if (file?.path) {
       const { secure_url, public_id } = await fileController.upload(
         file.path,

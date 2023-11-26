@@ -2,6 +2,7 @@ const path = require('path');
 const asyncHandler = require('../helpers/asyncHandler');
 const AuthService = require('../services/AuthService');
 const fileController = require('./FileController');
+const parse = require('date-fns/parse');
 
 class AuthController {
   register = asyncHandler(async (req, res) => {
@@ -77,6 +78,9 @@ class AuthController {
 
   update = asyncHandler(async (req, res) => {
     const { user, body, file } = req;
+    if (body?.birthday) {
+      body.birthday = parse(body.birthDate, 'dd-MM-yyyy', new Date());
+    }
     if (file?.path) {
       const { secure_url, public_id } = await fileController.upload(
         file.path,
@@ -104,6 +108,15 @@ class AuthController {
       },
     });
   });
+
+  // add a notice to the favorite list
+  addFavorite(owner, noticeId) {}
+
+  // get the favorite list
+  getFavorites() {}
+
+  // remove a notice from the favorite list
+  removeFavorite(owner, noticeId) {}
 }
 
 const authController = new AuthController();

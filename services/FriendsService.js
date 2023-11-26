@@ -1,4 +1,4 @@
-const Friend = require('../models/friend.js');
+const Friend = require('../models/Friend.js');
 
 class FriendService {
   async findAll({ filter = {}, options = {} }) {

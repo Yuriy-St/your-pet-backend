@@ -5,8 +5,8 @@ const addPetSchema = Joi.object({
   name: Joi.string().min(2).max(16).required(),
   type: Joi.string().min(2).max(16).required(),
   birthDate: Joi.date().format(['DD-MM-YYYY']),
-  sex: Joi.string().valid('male', 'female').optional(),
-  comments: Joi.string().max(120).optional(),
+  sex: Joi.string().valid('male', 'female', ''),
+  comments: Joi.string().max(120).allow(''),
 });
 
 const updatePetSchema = Joi.object({

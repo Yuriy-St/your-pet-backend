@@ -2,6 +2,7 @@ const noticeController = require('../controllers/NoticeController');
 const authenticate = require('../middleware/authenticate');
 const filters = require('../middleware/filters');
 const getImage = require('../middleware/getImage');
+const isValidId = require('../middleware/isValidId');
 const paging = require('../middleware/paging');
 const upload = require('../middleware/upload');
 const validateBody = require('../middleware/validateBody');
@@ -18,6 +19,9 @@ router.post(
   getImage,
   noticeController.add
 );
+
+// remove a notice
+router.delete('/:id', authenticate, isValidId, noticeController.remove);
 
 // get the own notices list
 router.get(

@@ -411,6 +411,41 @@
         }
       }
     },
+    "/api/notices/{id}": {
+      "delete": {
+        "operationId": "deleteNotice",
+        "tags": [
+          "Notices"
+        ],
+        "summary": "Delete user notice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Notice's id",
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notice successfully deleted",
+            "content": {}
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundErrorResponse"
+          }
+        }
+      }
+    },
     "/api/news/": {
       "get": {
         "operationId": "getAllNews",
@@ -967,6 +1002,11 @@
       "Notice": {
         "type": "object",
         "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Notice identifier in the DB",
+            "example": "6562e9622da08f1e40735a68"
+          },
           "category": {
             "type": "string",
             "description": "Notice category",

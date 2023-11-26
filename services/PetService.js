@@ -25,7 +25,7 @@ class PetService {
   async getById(id, projection = null) {
     const candidate = await Pet.findById(id, projection);
     if (!candidate) {
-      throw HttpError(404, 'Pet Not Found');
+      throw HttpError(404);
     }
     return candidate;
   }

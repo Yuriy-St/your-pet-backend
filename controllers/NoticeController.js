@@ -20,10 +20,13 @@ class NoticeController {
       data: {
         notice: {
           _id: newNotice._id,
+          category: newNotice.category,
           title: newNotice.title,
+          location: newNotice.location || '',
           name: newNotice.name,
-          birthDate: newNotice.birthDate,
           type: newNotice.type,
+          birthDate: newNotice.birthDate || new Date.now(),
+          sex: newNotice.sex,
           comments: newNotice.comments,
           imageURL: newNotice.imageURL,
         },
@@ -35,6 +38,8 @@ class NoticeController {
   remove = asyncHandler(async (req, res) => {
     const { _id: owner } = req.user;
     const { id } = req.params;
+    const { imageId } = await petService.getById(id, 'imageId');
+    await fileController.delete(imageId);
     await petService.remove({ id, owner });
 
     res.status(200).json({

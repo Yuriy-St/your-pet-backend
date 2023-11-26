@@ -8,6 +8,7 @@ const upload = require('../middleware/upload');
 const getImage = require('../middleware/getImage');
 const paging = require('../middleware/paging');
 const filters = require('../middleware/filters');
+const isValidId = require('../middleware/isValidId');
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ router.post(
 );
 
 // remove a pet
-router.delete('/:id', authenticate, petController.remove);
+router.delete('/:id', authenticate, isValidId, petController.remove);
 
 // get the all pet list
 // router.get('/', authenticate, filters, paging, petController.findAll);
@@ -31,12 +32,13 @@ router.delete('/:id', authenticate, petController.remove);
 router.get('/own', authenticate, paging, petController.findAllOwn);
 
 // get the a single pet
-router.get('/:id', authenticate, petController.getOne);
+router.get('/:id', authenticate, isValidId, petController.getOne);
 
 // update a pet
 router.patch(
   '/:id',
   authenticate,
+  isValidId,
   upload.single('image'),
   validateBody(schemas.updatePetSchema),
   getImage,

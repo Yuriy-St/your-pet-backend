@@ -20,10 +20,13 @@ class NoticeController {
       data: {
         notice: {
           _id: newNotice._id,
+          category: newNotice.category,
           title: newNotice.title,
+          location: newNotice.location || '',
           name: newNotice.name,
-          birthDate: newNotice.birthDate,
           type: newNotice.type,
+          birthDate: newNotice.birthDate || new Date.now(),
+          sex: newNotice.sex,
           comments: newNotice.comments,
           imageURL: newNotice.imageURL,
         },

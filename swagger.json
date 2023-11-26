@@ -1002,6 +1002,11 @@
       "Notice": {
         "type": "object",
         "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Notice identifier in the DB",
+            "example": "6562e9622da08f1e40735a68"
+          },
           "category": {
             "type": "string",
             "description": "Notice category",

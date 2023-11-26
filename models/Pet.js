@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 const handleMongooseError = require('../helpers/handleMongooseError');
 
 const CATEGORIES = ['own', 'sell', 'lost', 'found', 'good-hands'];
-const SEX = ['male', 'female', 'other'];
+const SEX = ['male', 'female', ''];
 
 const petSchema = new Schema(
   {
@@ -42,7 +42,7 @@ const petSchema = new Schema(
         values: SEX,
         message: '{VALUE} is not supported',
       },
-      default: 'other',
+      default: '',
     },
 
     type: {

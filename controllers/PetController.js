@@ -18,14 +18,16 @@ class PetController {
       code: 201,
       message: 'Pet successfully added',
       data: {
-        _id: newPet._id,
-        name: newPet.name,
-        type: newPet.type,
-        birthDate: newPet.birthDate,
-        sex: newPet.sex,
-        comments: newPet.comments,
-        category: newPet.category,
-        imageURL: newPet.imageURL,
+        pet: {
+          _id: newPet._id,
+          name: newPet.name,
+          type: newPet.type,
+          birthDate: newPet.birthDate,
+          sex: newPet.sex,
+          comments: newPet.comments,
+          category: newPet.category,
+          imageURL: newPet.imageURL,
+        },
       },
     });
   });
@@ -73,8 +75,8 @@ class PetController {
   findAllOwn = asyncHandler(async (req, res) => {
     const { paging } = req;
     const { _id: owner } = req.user;
-    const pets = await petService.findAllOwn({
-      filter: { owner },
+    const pets = await petService.findAllOwnPets({
+      owner,
       options: { ...paging },
     });
 
@@ -114,12 +116,14 @@ class PetController {
       code: 200,
       message: 'Pet updated successfully',
       data: {
-        name: updated.name,
-        birthDate: updated.birthDate,
-        sex: updated.sex,
-        type: updated.type,
-        comments: updated.comments,
-        imageURL: updated.imageURL,
+        pet: {
+          name: updated.name,
+          birthDate: updated.birthDate,
+          sex: updated.sex,
+          type: updated.type,
+          comments: updated.comments,
+          imageURL: updated.imageURL,
+        },
       },
     });
   });
@@ -134,12 +138,14 @@ class PetController {
       code: 200,
       message: 'Ok',
       data: {
-        name: pet.name,
-        birthDate: pet.birthDate,
-        sex: pet.sex,
-        type: pet.type,
-        comments: pet.comments,
-        imageURL: pet.imageURL,
+        pet: {
+          name: pet.name,
+          birthDate: pet.birthDate,
+          sex: pet.sex,
+          type: pet.type,
+          comments: pet.comments,
+          imageURL: pet.imageURL,
+        },
       },
     });
   });

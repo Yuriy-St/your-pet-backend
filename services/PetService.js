@@ -1,6 +1,5 @@
 const HttpError = require('../helpers/HttpError');
 const Pet = require('../models/Pet');
-const userService = require('./AuthService');
 
 class PetService {
   projection = 'name category birthDate type comments sex imageURL';
@@ -18,15 +17,24 @@ class PetService {
     return allPets;
   }
 
-  async findAllOwn({ filter = {}, options = {} }) {
-    const allPets = await Pet.find(filter, this.projection, options);
-    return allPets;
+  async findAllOwnPets({ owner, options = {} }) {
+    const ownPets = await Pet.find({ owner }, this.projection, options)
+      .where('category')
+      .equals('own');
+    return ownPets;
+  }
+
+  async findAllOwnNotices({ owner, options = {} }) {
+    const ownNotices = await Pet.find({ owner }, this.projection, options)
+      .where('category')
+      .in(['sell', 'lost', 'found', 'good-hands']);
+    return ownNotices;
   }
 
   async getById(id, projection = null) {
     const candidate = await Pet.findById(id, projection);
     if (!candidate) {
-      throw HttpError(404, 'Pet Not Found');
+      throw HttpError(404);
     }
     return candidate;
   }

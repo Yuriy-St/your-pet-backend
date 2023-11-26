@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('joi').extend(require('@joi/date'));
 
 const addNoticeSchema = Joi.object({
   category: Joi.string()
@@ -19,8 +19,8 @@ const addNoticeSchema = Joi.object({
   type: Joi.string().min(2).max(16).required(),
   birthDate: Joi.alternatives().conditional('category', {
     not: 'found',
-    then: Joi.number().required(),
-    otherwise: Joi.number().allow('').optional(),
+    then: Joi.date().format(['DD-MM-YYYY']).required(),
+    otherwise: Joi.date().allow('').optional(),
   }),
   sex: Joi.string().valid('male', 'female').required(),
   comments: Joi.string().max(120).optional(),
@@ -42,8 +42,8 @@ const updateNoticeSchema = Joi.object({
   type: Joi.string().min(2).max(16),
   birthDate: Joi.alternatives().conditional('category', {
     not: 'found',
-    then: Joi.number(),
-    otherwise: Joi.number().allow('').optional(),
+    then: Joi.date().format(['DD-MM-YYYY']).optional(),
+    otherwise: Joi.date().allow('').optional(),
   }),
   sex: Joi.string().valid('male', 'female'),
   comments: Joi.string().max(120).optional(),

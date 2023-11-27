@@ -55,31 +55,15 @@ class NoticeController {
     });
   });
 
-  // get all notices
-  getAll = asyncHandler(async (req, res) => {
-    const { category } = req.body;
-    const result = await petService.findAll({ projection: category });
-
-    res.status(200);
-    res.json({
-      code: 200,
-      message: 'Notices successfully retrieved',
-      qty: result.length,
-      data: {
-        result,
-      },
-    });
-  });
-
   // get own notice list
   findByCategory = asyncHandler(async (req, res) => {
     const { filters, paging } = req;
     const { category } = req.params;
-    const { title } = req.query;
+    const { q } = req.query;
     const notices = await petService.findNoticesByCategory({
       filter: {
         category,
-        title: { $regex: new RegExp(title, 'i') },
+        title: { $regex: new RegExp(q, 'i') },
       },
       options: { ...paging },
     });

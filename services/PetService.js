@@ -2,7 +2,11 @@ const HttpError = require('../helpers/HttpError');
 const Pet = require('../models/Pet');
 
 class PetService {
-  projection = 'name category birthDate type comments sex imageURL';
+  petProjection = 'name category birthDate type comments sex imageURL';
+  noticeProjection =
+    'category title location name type birthDate sex comments imageURL inFavorites';
+  noticeProjectionShort =
+    'category title location type birthDate sex imageURL inFavorites';
 
   async add(body) {
     const newPet = await Pet.create(body);
@@ -10,29 +14,30 @@ class PetService {
   }
 
   async findAll({ filter = {}, options = {} }) {
-    const allPets = await Pet.find(filter, this.projection, options).populate(
-      'owner',
-      'name email phone avatarURL'
-    );
+    const allPets = await Pet.find(
+      filter,
+      this.petProjection,
+      options
+    ).populate('owner', 'name email phone avatarURL');
     return allPets;
   }
 
   async findAllOwnPets({ owner, options = {} }) {
-    const ownPets = await Pet.find({ owner }, this.projection, options)
+    const ownPets = await Pet.find({ owner }, this.petProjection, options)
       .where('category')
       .equals('own');
     return ownPets;
   }
 
   async findAllOwnNotices({ owner, options = {} }) {
-    const ownNotices = await Pet.find({ owner }, this.projection, options)
+    const ownNotices = await Pet.find({ owner }, this.noticeProjection, options)
       .where('category')
       .in(['sell', 'lost', 'found', 'good-hands']);
     return ownNotices;
   }
 
   async findNoticesByCategory({ filter = {}, options = {} }) {
-    const notices = await Pet.find(filter, this.projection, options);
+    const notices = await Pet.find(filter, this.noticeProjectionShort, options);
     return notices;
   }
 

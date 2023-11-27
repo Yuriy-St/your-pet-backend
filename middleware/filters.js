@@ -1,5 +1,5 @@
 const filters = (req, res, next) => {
-  const { filter } = req.q;
+  const { filter } = req.query;
 
   req.filters = {
     ...filter,

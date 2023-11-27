@@ -76,8 +76,12 @@ class NoticeController {
   findByCategory = asyncHandler(async (req, res) => {
     const { filters, paging } = req;
     const { category } = req.params;
-    const notices = await petService.findAll({
-      filter: { category },
+    const { title } = req.query;
+    const notices = await petService.findNoticesByCategory({
+      filter: {
+        category,
+        title: { $regex: new RegExp(title, 'i') },
+      },
       options: { ...paging },
     });
     res.status(200).json({
@@ -86,6 +90,21 @@ class NoticeController {
       qty: notices.length,
       data: {
         notices,
+      },
+    });
+  });
+
+  // find a notice by ID
+  findById = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const notice = petService.getById(id);
+
+    res.status(200);
+    res.json({
+      code: 200,
+      message: 'Ok',
+      data: {
+        notice: this.responseSchema(notice),
       },
     });
   });
@@ -113,13 +132,13 @@ class NoticeController {
   // update notice
   update = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const pet = petService.getById(id);
+    const notice = petService.getById(id);
     const { user, body, file } = req;
     if (file?.path) {
       const { secure_url, public_id } = await fileController.upload(
         file.path,
         'images',
-        pet.imageId
+        notice.imageId
       );
       body.imageURL = secure_url;
       body.imageId = public_id ? path.parse(public_id).name : null;
@@ -130,7 +149,7 @@ class NoticeController {
     res.status(200);
     res.json({
       code: 200,
-      message: 'Pet updated successfully',
+      message: 'Notice updated successfully',
       data: {
         notice: this.responseSchema(updated),
       },
@@ -141,7 +160,7 @@ class NoticeController {
   getByFilter() {}
 
   // get a single notice
-  getOne(id) {}
+  (id) {}
 
   // add to favorites list
   addToFavorites(userId, noticeId) {}

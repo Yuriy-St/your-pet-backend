@@ -1,5 +1,7 @@
 const { Schema, model } = require('mongoose');
 const handleMongooseError = require('../helpers/handleMongooseError');
+const parse = require('date-fns/parse');
+const format = require('date-fns/format');
 
 const CATEGORIES = ['own', 'sell', 'lost', 'found', 'good-hands'];
 const SEX = ['male', 'female', ''];
@@ -27,13 +29,18 @@ const petSchema = new Schema(
 
     birthDate: {
       type: Date,
+      set: v => {
+        const date = v ? parse(v, 'dd-MM-yyyy', new Date()) : 0;
+        return date;
+      },
       required: [
         function () {
-          return this.category !== 'found';
+          const flag = this.category !== 'found';
+          return flag;
         },
         'Birth date is required',
       ],
-      default: 0,
+      default: format(new Date(), 'dd-MM-yyyy'),
     },
 
     sex: {

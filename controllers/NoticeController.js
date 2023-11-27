@@ -28,7 +28,6 @@ class NoticeController {
     const { _id: owner } = req.user;
     const newNotice = await petService.add({
       ...req.body,
-      birthDate: parse(req.body.birthDate, 'dd-MM-yyyy', new Date()),
       owner,
     });
 
@@ -158,9 +157,6 @@ class NoticeController {
 
   // find by category and/or by matching title
   getByFilter() {}
-
-  // get a single notice
-  (id) {}
 
   // add to favorites list
   addToFavorites(userId, noticeId) {}

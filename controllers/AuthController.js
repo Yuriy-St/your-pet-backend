@@ -78,9 +78,6 @@ class AuthController {
 
   update = asyncHandler(async (req, res) => {
     const { user, body, file } = req;
-    if (body?.birthday) {
-      body.birthday = parse(body.birthDate, 'dd-MM-yyyy', new Date());
-    }
     if (file?.path) {
       const { secure_url, public_id } = await fileController.upload(
         file.path,

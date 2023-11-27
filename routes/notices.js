@@ -30,6 +30,6 @@ router.get('/own', authenticate, paging, noticeController.findAllOwn);
 router.get('/:category', paging, noticeController.findByCategory);
 
 // find a notice
-router.get('/:id', authenticate, isValidId, noticeController.findById);
+router.get('/id/:id', isValidId, noticeController.findById);
 
 module.exports = router;

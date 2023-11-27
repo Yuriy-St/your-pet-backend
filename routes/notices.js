@@ -23,13 +23,13 @@ router.post(
 // remove a notice
 router.delete('/:id', authenticate, isValidId, noticeController.remove);
 
-// find a notice
-router.get('/:id', authenticate, isValidId, noticeController.findById);
-
 // get the own notices list
 router.get('/own', authenticate, paging, noticeController.findAllOwn);
 
 // get the notices list by category
-router.get('/:category', authenticate, paging, noticeController.findByCategory);
+router.get('/:category', paging, noticeController.findByCategory);
+
+// find a notice
+router.get('/:id', authenticate, isValidId, noticeController.findById);
 
 module.exports = router;

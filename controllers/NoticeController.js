@@ -6,6 +6,23 @@ const fileController = require('./FileController');
 const parse = require('date-fns/parse');
 
 class NoticeController {
+  // notice response schema
+  responseSchema(notice) {
+    return {
+      _id: notice._id,
+      category: notice.category,
+      title: notice.title,
+      location: notice.location || '',
+      name: notice.name,
+      type: notice.type,
+      birthDate: notice.birthDate || Date.now(),
+      sex: notice.sex,
+      comments: notice.comments,
+      imageURL: notice.imageURL,
+      inFavorites: notice.inFavorites,
+    };
+  }
+
   // add by user
   add = asyncHandler(async (req, res, next) => {
     const { _id: owner } = req.user;
@@ -19,18 +36,7 @@ class NoticeController {
       code: 201,
       message: 'Notice successfully added',
       data: {
-        notice: {
-          _id: newNotice._id,
-          category: newNotice.category,
-          title: newNotice.title,
-          location: newNotice.location || '',
-          name: newNotice.name,
-          type: newNotice.type,
-          birthDate: newNotice.birthDate || new Date.now(),
-          sex: newNotice.sex,
-          comments: newNotice.comments,
-          imageURL: newNotice.imageURL,
-        },
+        notice: this.responseSchema(newNotice),
       },
     });
   });
@@ -53,7 +59,7 @@ class NoticeController {
   // get all notices
   getAll = asyncHandler(async (req, res) => {
     const { category } = req.body;
-    const result = await petService.getAll({ projection: category });
+    const result = await petService.findAll({ projection: category });
 
     res.status(200);
     res.json({
@@ -67,19 +73,38 @@ class NoticeController {
   });
 
   // get own notice list
-  getFilteredList = asyncHandler(async (req, res) => {
+  findByCategory = asyncHandler(async (req, res) => {
     const { filters, paging } = req;
-    // TODO: make settings for filtering only notices
-    const notices = await petService.findAll({
-      filter: filters,
+    const { category } = req.params;
+    const { title } = req.query;
+    const notices = await petService.findNoticesByCategory({
+      filter: {
+        category,
+        title: { $regex: new RegExp(title, 'i') },
+      },
       options: { ...paging },
     });
     res.status(200).json({
       code: 200,
       message: 'ok',
-      qty: data.length,
+      qty: notices.length,
       data: {
         notices,
+      },
+    });
+  });
+
+  // find a notice by ID
+  findById = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const notice = petService.getById(id);
+
+    res.status(200);
+    res.json({
+      code: 200,
+      message: 'Ok',
+      data: {
+        notice: this.responseSchema(notice),
       },
     });
   });
@@ -88,7 +113,7 @@ class NoticeController {
   findAllOwn = asyncHandler(async (req, res) => {
     const { paging } = req;
     const { _id: owner } = req.user;
-    const pets = await petService.findAllOwnNotices({
+    const notices = await petService.findAllOwnNotices({
       owner,
       options: { ...paging },
     });
@@ -98,8 +123,8 @@ class NoticeController {
       code: 200,
       message: 'Ok',
       data: {
-        qty: pets.length,
-        pets,
+        qty: notices.length,
+        notices,
       },
     });
   });
@@ -107,13 +132,13 @@ class NoticeController {
   // update notice
   update = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const pet = petService.getById(id);
+    const notice = petService.getById(id);
     const { user, body, file } = req;
     if (file?.path) {
       const { secure_url, public_id } = await fileController.upload(
         file.path,
         'images',
-        pet.imageId
+        notice.imageId
       );
       body.imageURL = secure_url;
       body.imageId = public_id ? path.parse(public_id).name : null;
@@ -124,18 +149,9 @@ class NoticeController {
     res.status(200);
     res.json({
       code: 200,
-      message: 'Pet updated successfully',
+      message: 'Notice updated successfully',
       data: {
-        name: updated.name,
-        category: updated.category,
-        birthDate: updated.birthDate,
-        sex: updated.sex,
-        type: updated.type,
-        comments: updated.comments,
-        imageURL: updated.imageURL,
-        title: updated.title,
-        location: updated.location,
-        inFavorites: updated.inFavorites,
+        notice: this.responseSchema(updated),
       },
     });
   });
@@ -144,7 +160,7 @@ class NoticeController {
   getByFilter() {}
 
   // get a single notice
-  getOne(id) {}
+  (id) {}
 
   // add to favorites list
   addToFavorites(userId, noticeId) {}

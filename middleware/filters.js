@@ -1,15 +1,9 @@
 const filters = (req, res, next) => {
-  const { filter, category } = req.query;
+  const { filter } = req.query;
 
-  const filters = {
+  req.filters = {
     ...filter,
   };
-
-  if (category) {
-    filters.category = category;
-  }
-
-  req.filters = filters;
 
   next();
 };

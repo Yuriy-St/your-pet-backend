@@ -80,7 +80,7 @@ class NoticeController {
   // find a notice by ID
   findById = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const notice = petService.getById(id);
+    const notice = await petService.findNoticeById(id);
 
     res.status(200);
     res.json({

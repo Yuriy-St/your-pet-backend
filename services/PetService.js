@@ -41,8 +41,16 @@ class PetService {
     return notices;
   }
 
-  async getById(id, projection = null) {
+  async getById(id, projection = {}) {
     const candidate = await Pet.findById(id, projection);
+    if (!candidate) {
+      throw HttpError(404);
+    }
+    return candidate;
+  }
+
+  async findNoticeById(id) {
+    const candidate = await Pet.findById(id, this.noticeProjection);
     if (!candidate) {
       throw HttpError(404);
     }

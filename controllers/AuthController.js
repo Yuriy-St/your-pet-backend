@@ -2,7 +2,6 @@ const path = require('path');
 const asyncHandler = require('../helpers/asyncHandler');
 const AuthService = require('../services/AuthService');
 const fileController = require('./FileController');
-const parse = require('date-fns/parse');
 
 class AuthController {
   register = asyncHandler(async (req, res) => {
@@ -25,7 +24,8 @@ class AuthController {
           city: user.city,
           avatarURL: user.avatarURL,
         },
-        token: user.token,
+        accessToken: user.accessToken,
+        refreshToken: user.refreshToken,
       },
     });
   });
@@ -45,7 +45,20 @@ class AuthController {
           city: user.city,
           avatarURL: user.avatarURL,
         },
-        token: user.token,
+        accessToken: user.accessToken,
+        refreshToken: user.refreshToken,
+      },
+    });
+  });
+
+  refresh = asyncHandler(async (req, res) => {
+    const { accessToken, refreshToken } = await AuthService.refresh(req.body);
+    res.status(200).json({
+      code: 200,
+      message: 'Access token refresh successfully',
+      data: {
+        accessToken,
+        refreshToken,
       },
     });
   });
@@ -105,15 +118,6 @@ class AuthController {
       },
     });
   });
-
-  // add a notice to the favorite list
-  addFavorite(owner, noticeId) {}
-
-  // get the favorite list
-  getFavorites() {}
-
-  // remove a notice from the favorite list
-  removeFavorite(owner, noticeId) {}
 }
 
 const authController = new AuthController();

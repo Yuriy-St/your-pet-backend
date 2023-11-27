@@ -10,7 +10,6 @@ class PetController {
     const { _id: owner } = req.user;
     const newPet = await petService.add({
       ...req.body,
-      birthDate: parse(req.body.birthDate, 'dd-MM-yyyy', new Date()),
       owner,
     });
 

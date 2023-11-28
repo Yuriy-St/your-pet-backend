@@ -3,6 +3,7 @@ const petService = require('../services/PetService');
 const path = require('path');
 const fileController = require('./FileController');
 const { parse } = require('date-fns');
+const HttpError = require('../helpers/HttpError');
 
 class PetController {
   // add by user
@@ -33,10 +34,13 @@ class PetController {
 
   // remove a pet
   remove = asyncHandler(async (req, res) => {
-    const { _id: owner } = req.user;
+    const { _id: currentUser } = req.user;
     const { id } = req.params;
-    const { imageId } = await petService.getById(id, 'imageId');
-    await petService.remove({ id, owner });
+    const { owner, imageId } = await petService.getById(id, 'owner, imageId');
+    if (currentUser !== owner) {
+      throw HttpError(403);
+    }
+    await petService.remove(id);
     await fileController.delete(imageId);
 
     res.status(200).json({

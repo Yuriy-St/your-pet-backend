@@ -20,6 +20,9 @@ router.post(
   noticeController.add
 );
 
+// add to favorites
+// router.post('/favorites', authenticate, noticeController.tougleFavorites);
+
 // remove a notice
 router.delete('/:id', authenticate, isValidId, noticeController.remove);
 

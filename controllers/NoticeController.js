@@ -1,9 +1,8 @@
 const asyncHandler = require('../helpers/asyncHandler');
 const petService = require('../services/PetService');
-const fs = require('fs/promises');
 const path = require('path');
 const fileController = require('./FileController');
-const parse = require('date-fns/parse');
+const HttpError = require('../helpers/HttpError');
 
 class NoticeController {
   // notice response schema
@@ -25,7 +24,7 @@ class NoticeController {
   }
 
   // add by user
-  add = asyncHandler(async (req, res, next) => {
+  add = asyncHandler(async (req, res) => {
     const { _id: owner } = req.user;
     const newNotice = await petService.add({
       ...req.body,
@@ -43,11 +42,14 @@ class NoticeController {
 
   // remove a notice
   remove = asyncHandler(async (req, res) => {
-    const { _id: owner } = req.user;
+    const { _id: currentUser } = req.user;
     const { id } = req.params;
-    const { imageId } = await petService.getById(id, 'imageId');
+    const { owner, imageId } = await petService.getById(id, 'owner, imageId');
+    if (currentUser !== owner) {
+      throw HttpError(403);
+    }
     await fileController.delete(imageId);
-    await petService.remove({ id, owner });
+    await petService.remove(id);
 
     res.status(200).json({
       code: 200,
@@ -144,10 +146,10 @@ class NoticeController {
   getByFilter() {}
 
   // add/remove from favorites list
-  addToFavorites = asyncHandler(async (req, res) => {
-    // const { _id: owner } = req.body;
-    // const { id: noticeId, favorite } = req.query;
-  });
+  // addToFavorites = asyncHandler(async (req, res) => {
+  //   const { _id: owner } = req.body;
+  //   const { id: noticeId, favorite } = req.query;
+  // });
 }
 
 const noticeController = new NoticeController();

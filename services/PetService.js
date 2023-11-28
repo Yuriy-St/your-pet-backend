@@ -60,7 +60,7 @@ class PetService {
     return candidate;
   }
 
-  async remove({ id, owner }) {
+  async remove(id) {
     const removed = await Pet.findByIdAndRemove(id);
     // TODO: remove from favorite list
     return removed;

@@ -60,21 +60,30 @@ class NoticeController {
 
   // get own notice list
   findByCategory = asyncHandler(async (req, res) => {
-    const { filters, paging } = req;
+    const { paging } = req;
     const { category } = req.params;
     const { q } = req.query;
-    const notices = await petService.findNoticesByCategory({
-      filter: {
-        category,
-        title: { $regex: new RegExp(q, 'i') },
-      },
-      options: { ...paging },
-    });
+    const filter = {
+      category: { $regex: new RegExp(category, 'i') },
+      title: { $regex: new RegExp(q, 'i') },
+    };
+    const total = await petService.countNotices(filter);
+
+    let notices = [];
+
+    if (total > 0) {
+      notices = await petService.findNotices({
+        filter,
+        options: { ...paging },
+      });
+    }
+
     res.status(200).json({
       code: 200,
       message: 'ok',
-      qty: notices.length,
       data: {
+        total,
+        qty: notices.length,
         notices,
       },
     });
@@ -99,8 +108,15 @@ class NoticeController {
   findAllOwn = asyncHandler(async (req, res) => {
     const { paging } = req;
     const { _id: owner } = req.user;
-    const notices = await petService.findAllOwnNotices({
+    const { q } = req.query;
+    const filter = {
       owner,
+      title: { $regex: new RegExp(q, 'i') },
+    };
+    const total = await petService.countNotices(filter);
+
+    const notices = await petService.findNotices({
+      filter,
       options: { ...paging },
     });
 
@@ -109,6 +125,7 @@ class NoticeController {
       code: 200,
       message: 'Ok',
       data: {
+        total,
         qty: notices.length,
         notices,
       },

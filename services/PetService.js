@@ -29,16 +29,18 @@ class PetService {
     return ownPets;
   }
 
-  async findAllOwnNotices({ owner, options = {} }) {
-    const ownNotices = await Pet.find({ owner }, this.noticeProjection, options)
+  async findNotices({ filter, options = {} }) {
+    const ownNotices = await Pet.find(filter, this.noticeProjection, options)
       .where('category')
       .in(['sell', 'lost', 'found', 'good-hands']);
     return ownNotices;
   }
 
-  async findNoticesByCategory({ filter = {}, options = {} }) {
-    const notices = await Pet.find(filter, this.noticeProjectionShort, options);
-    return notices;
+  async countNotices(filter = {}) {
+    const total = await Pet.countDocuments(filter)
+      .where('category')
+      .in(['sell', 'lost', 'found', 'good-hands']);
+    return total;
   }
 
   async getById(id, projection = {}) {

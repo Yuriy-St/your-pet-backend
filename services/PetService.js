@@ -50,7 +50,10 @@ class PetService {
   }
 
   async findNoticeById(id) {
-    const candidate = await Pet.findById(id, this.noticeProjection);
+    const candidate = await Pet.findById(id, this.noticeProjection).populate(
+      'owner',
+      'email phone'
+    );
     if (!candidate) {
       throw HttpError(404);
     }

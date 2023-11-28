@@ -2,9 +2,18 @@ const path = require('path');
 const asyncHandler = require('../helpers/asyncHandler');
 const AuthService = require('../services/AuthService');
 const fileController = require('./FileController');
-const parse = require('date-fns/parse');
 
 class AuthController {
+  responseUserSchema = user => ({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    birthday: user.birthday || '',
+    phone: user.phone || '',
+    city: user.city,
+    avatarURL: user.avatarURL,
+  });
+
   register = asyncHandler(async (req, res) => {
     await AuthService.register({
       ...req.body,
@@ -17,14 +26,7 @@ class AuthController {
       code: 201,
       message: 'User registered successfully.',
       data: {
-        user: {
-          name: user.name,
-          email: user.email,
-          birthday: user.birthday || '',
-          phone: user.phone || '',
-          city: user.city,
-          avatarURL: user.avatarURL,
-        },
+        user: this.responseUserSchema(user),
         token: user.token,
       },
     });
@@ -37,14 +39,7 @@ class AuthController {
       code: 200,
       message: 'User logged in successfully',
       data: {
-        user: {
-          name: user.name,
-          email: user.email,
-          birthday: user.birthday || '',
-          phone: user.phone || '',
-          city: user.city,
-          avatarURL: user.avatarURL,
-        },
+        user: this.responseUserSchema(user),
         token: user.token,
       },
     });
@@ -64,14 +59,7 @@ class AuthController {
       code: 200,
       message: 'OK',
       data: {
-        user: {
-          name: user.name,
-          email: user.email,
-          birthday: user.birthday || '',
-          phone: user.phone || '',
-          city: user.city,
-          avatarURL: user.avatarURL,
-        },
+        user: this.responseUserSchema(user),
       },
     });
   });
@@ -94,14 +82,7 @@ class AuthController {
       code: 200,
       message: 'User updated successfully',
       data: {
-        user: {
-          name: updUser.name,
-          email: updUser.email,
-          birthday: updUser.birthday || '',
-          phone: updUser.phone || '',
-          city: updUser.city,
-          avatarURL: updUser.avatarURL,
-        },
+        user: this.responseUserSchema(updUser),
       },
     });
   });

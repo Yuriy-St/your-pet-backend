@@ -78,7 +78,8 @@ class NoticeController {
       });
     }
 
-    res.status(200).json({
+    res.status(200);
+    res.json({
       code: 200,
       message: 'ok',
       data: {
@@ -115,10 +116,14 @@ class NoticeController {
     };
     const total = await petService.countNotices(filter);
 
-    const notices = await petService.findNotices({
-      filter,
-      options: { ...paging },
-    });
+    let notices = [];
+
+    if (total > 0) {
+      notices = await petService.findNotices({
+        filter,
+        options: { ...paging },
+      });
+    }
 
     res.status(200);
     res.json({

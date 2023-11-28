@@ -20,6 +20,7 @@ class NoticeController {
       comments: notice.comments,
       imageURL: notice.imageURL,
       inFavorites: notice.inFavorites,
+      owner: notice.owner,
     };
   }
 
@@ -142,11 +143,11 @@ class NoticeController {
   // find by category and/or by matching title
   getByFilter() {}
 
-  // add to favorites list
-  addToFavorites(userId, noticeId) {}
-
-  // remove a notice from the favorite list
-  removeFromFavorites(userId, noticeId) {}
+  // add/remove from favorites list
+  addToFavorites = asyncHandler(async (req, res) => {
+    // const { _id: owner } = req.body;
+    // const { id: noticeId, favorite } = req.query;
+  });
 }
 
 const noticeController = new NoticeController();

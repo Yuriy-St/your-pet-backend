@@ -7,14 +7,14 @@ const HttpError = require('../helpers/HttpError');
 
 class PetController {
   responsePetSchema = pet => ({
-    _id: newPet._id,
-    name: newPet.name,
-    type: newPet.type,
-    birthDate: newPet.birthDate,
-    sex: newPet.sex,
-    comments: newPet.comments,
-    category: newPet.category,
-    imageURL: newPet.imageURL,
+    _id: pet._id,
+    name: pet.name,
+    type: pet.type,
+    birthDate: pet.birthDate,
+    sex: pet.sex,
+    comments: pet.comments,
+    category: pet.category,
+    imageURL: pet.imageURL,
   });
 
   // add by user

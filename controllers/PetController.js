@@ -6,6 +6,17 @@ const { parse } = require('date-fns');
 const HttpError = require('../helpers/HttpError');
 
 class PetController {
+  responsePetSchema = pet => ({
+    _id: newPet._id,
+    name: newPet.name,
+    type: newPet.type,
+    birthDate: newPet.birthDate,
+    sex: newPet.sex,
+    comments: newPet.comments,
+    category: newPet.category,
+    imageURL: newPet.imageURL,
+  });
+
   // add by user
   add = asyncHandler(async (req, res, next) => {
     const { _id: owner } = req.user;
@@ -18,16 +29,7 @@ class PetController {
       code: 201,
       message: 'Pet successfully added',
       data: {
-        pet: {
-          _id: newPet._id,
-          name: newPet.name,
-          type: newPet.type,
-          birthDate: newPet.birthDate,
-          sex: newPet.sex,
-          comments: newPet.comments,
-          category: newPet.category,
-          imageURL: newPet.imageURL,
-        },
+        pet: this.responsePetSchema(newPet),
       },
     });
   });
@@ -53,7 +55,7 @@ class PetController {
   // get all pet
   findAll = asyncHandler(async (req, res) => {
     const { filters, paging, noRes } = req;
-    const pets = await petService.findAll({
+    const pets = await petService.findAllPets({
       filter: filters,
       options: { ...paging },
     });
@@ -76,18 +78,31 @@ class PetController {
 
   // get all own user's pet
   findAllOwn = asyncHandler(async (req, res) => {
+    // const { paging } = req;
+    // const { _id: owner } = req.user;
+    // const pets = await petService.findAllOwnPets({
+    //   owner,
+    //   options: { ...paging },
+    // });
     const { paging } = req;
     const { _id: owner } = req.user;
-    const pets = await petService.findAllOwnPets({
-      owner,
-      options: { ...paging },
-    });
+    const total = await petService.countPets({ owner });
+
+    let pets = [];
+
+    if (total > 0) {
+      pets = await petService.findAllOwnPets({
+        owner,
+        options: { ...paging },
+      });
+    }
 
     res.status(200);
     res.json({
       code: 200,
       message: 'Ok',
       data: {
+        total,
         qty: pets.length,
         pets,
       },
@@ -119,14 +134,7 @@ class PetController {
       code: 200,
       message: 'Pet updated successfully',
       data: {
-        pet: {
-          name: updated.name,
-          birthDate: updated.birthDate,
-          sex: updated.sex,
-          type: updated.type,
-          comments: updated.comments,
-          imageURL: updated.imageURL,
-        },
+        pet: this.responsePetSchema(updated),
       },
     });
   });
@@ -141,14 +149,7 @@ class PetController {
       code: 200,
       message: 'Ok',
       data: {
-        pet: {
-          name: pet.name,
-          birthDate: pet.birthDate,
-          sex: pet.sex,
-          type: pet.type,
-          comments: pet.comments,
-          imageURL: pet.imageURL,
-        },
+        pet: this.responsePetSchema(pet),
       },
     });
   });

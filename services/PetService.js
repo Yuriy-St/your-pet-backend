@@ -2,18 +2,23 @@ const HttpError = require('../helpers/HttpError');
 const Pet = require('../models/Pet');
 
 class PetService {
-  petProjection = 'name category birthDate type comments sex imageURL';
+  petProjection = 'owner name category birthDate type comments sex imageURL';
   noticeProjection =
-    'category title location name type birthDate sex comments imageURL inFavorites';
+    'owner category title location name type birthDate sex comments imageURL inFavorites';
   noticeProjectionShort =
-    'category title location type birthDate sex imageURL inFavorites';
+    'owner category title location type birthDate sex imageURL inFavorites';
 
   async add(body) {
     const newPet = await Pet.create(body);
     return newPet;
   }
 
-  async findAll({ filter = {}, options = {} }) {
+  async countPets(filter = {}) {
+    const total = await Pet.countDocuments({ ...filter, category: 'own' });
+    return total;
+  }
+
+  async findAllPets({ filter = {}, options = {} }) {
     const allPets = await Pet.find(
       filter,
       this.petProjection,
@@ -23,9 +28,14 @@ class PetService {
   }
 
   async findAllOwnPets({ owner, options = {} }) {
-    const ownPets = await Pet.find({ owner }, this.petProjection, options)
-      .where('category')
-      .equals('own');
+    if (!owner) {
+      throw HttpError(500, 'Unknown owner', 'ServiceError');
+    }
+    const ownPets = await Pet.find(
+      { owner, category: 'own' },
+      this.petProjection,
+      options
+    );
     return ownPets;
   }
 

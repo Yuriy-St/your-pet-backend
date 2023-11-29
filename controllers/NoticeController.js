@@ -19,6 +19,7 @@ class NoticeController {
       comments: notice.comments,
       imageURL: notice.imageURL,
       inFavorites: notice.inFavorites,
+      price: notice.price,
       owner: notice.owner,
     };
   }
@@ -45,7 +46,8 @@ class NoticeController {
     const { _id: currentUser } = req.user;
     const { id } = req.params;
     const { owner, imageId } = await petService.getById(id, 'owner imageId');
-    if (currentUser !== owner) {
+    const sameOwner = currentUser.equals(owner);
+    if (!sameOwner) {
       throw HttpError(403);
     }
     await fileController.delete(imageId);
@@ -74,6 +76,7 @@ class NoticeController {
     if (total > 0) {
       notices = await petService.findNotices({
         filter,
+        sort: { createdAt: -1 },
         options: { ...paging },
       });
     }
@@ -81,7 +84,7 @@ class NoticeController {
     res.status(200);
     res.json({
       code: 200,
-      message: 'ok',
+      message: 'Ok',
       data: {
         total,
         qty: notices.length,
@@ -121,6 +124,7 @@ class NoticeController {
     if (total > 0) {
       notices = await petService.findNotices({
         filter,
+        sort: { createdAt: -1 },
         options: { ...paging },
       });
     }

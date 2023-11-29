@@ -44,7 +44,7 @@ class NoticeController {
   remove = asyncHandler(async (req, res) => {
     const { _id: currentUser } = req.user;
     const { id } = req.params;
-    const { owner, imageId } = await petService.getById(id, 'owner, imageId');
+    const { owner, imageId } = await petService.getById(id, 'owner imageId');
     if (currentUser !== owner) {
       throw HttpError(403);
     }

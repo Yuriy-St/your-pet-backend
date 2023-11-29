@@ -4,7 +4,7 @@ const Pet = require('../models/Pet');
 class PetService {
   petProjection = 'owner name category birthDate type comments sex imageURL';
   noticeProjection =
-    'owner category title location name type birthDate sex comments imageURL inFavorites';
+    'owner category title location name type birthDate sex price comments imageURL inFavorites';
   noticeProjectionShort =
     'owner category title location type birthDate sex imageURL inFavorites';
 
@@ -39,11 +39,10 @@ class PetService {
     return ownPets;
   }
 
-  async findNotices({ filter, options = {} }) {
-    const ownNotices = await Pet.find(filter, this.noticeProjection, options)
-      .where('category')
-      .in(['sell', 'lost', 'found', 'good-hands']);
-    return ownNotices;
+  async findNotices({ filter = {}, options = {}, sort = {} }) {
+    const projection = this.noticeProjection;
+    const notices = await Pet.find(filter, projection, options).sort(sort);
+    return notices;
   }
 
   async countNotices(filter = {}) {

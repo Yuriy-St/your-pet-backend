@@ -4,8 +4,6 @@ cloudinary.config({
   secure: true,
 });
 
-console.log(cloudinary.config);
-
 class CloudinaryService {
   #options = {
     use_filename: true,

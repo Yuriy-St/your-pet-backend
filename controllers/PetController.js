@@ -38,8 +38,9 @@ class PetController {
   remove = asyncHandler(async (req, res) => {
     const { _id: currentUser } = req.user;
     const { id } = req.params;
-    const { owner, imageId } = await petService.getById(id, 'owner, imageId');
-    if (currentUser !== owner) {
+    const { owner, imageId } = await petService.getById(id, 'owner imageId');
+    const sameOwner = currentUser.equals(owner);
+    if (!sameOwner) {
       throw HttpError(403);
     }
     await petService.remove(id);

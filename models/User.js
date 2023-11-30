@@ -20,10 +20,7 @@ const userSchema = new Schema(
     },
     birthday: {
       type: Date,
-      set: v => {
-        v ? parse(v, 'dd-MM-yyyy', new Date()) : 0;
-      },
-      default: 0,
+      set: v => (v ? parse(v, 'dd-MM-yyyy', new Date()) : 0),
     },
     phone: {
       type: String,

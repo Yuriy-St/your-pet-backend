@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 const handleMongooseError = require('../helpers/handleMongooseError');
+const parse = require('date-fns/parse');
 
 const userSchema = new Schema(
   {
@@ -19,7 +20,7 @@ const userSchema = new Schema(
     },
     birthday: {
       type: Date,
-      default: 0,
+      set: v => (v ? parse(v, 'dd-MM-yyyy', new Date()) : 0),
     },
     phone: {
       type: String,

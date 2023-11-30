@@ -27,7 +27,7 @@ const updateSchema = Joi.object({
     minDomainSegments: 2,
     tlds: false,
   }),
-  birthday: Joi.date().format(['DD-MM-YYYY']),
+  birthday: Joi.date().format('DD-MM-YYYY'),
   phone: Joi.string(),
   city: Joi.string(),
 });

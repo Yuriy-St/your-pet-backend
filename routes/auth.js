@@ -29,8 +29,8 @@ router.post(
 router.patch(
   '/',
   authenticate,
-  validateBody(schemas.updateSchema),
   upload.single('avatar'),
+  validateBody(schemas.updateSchema),
   authController.update
 );
 

@@ -172,10 +172,39 @@ class NoticeController {
   getByFilter() {}
 
   // add/remove from favorites list
-  // addToFavorites = asyncHandler(async (req, res) => {
-  //   const { _id: owner } = req.body;
-  //   const { id: noticeId, favorite } = req.query;
-  // });
+  toggleFavorites = asyncHandler(async (req, res) => {
+    const { _id: userId } = req.user;
+    const { id: noticeId } = req.params;
+    const { favorite } = req.query;
+    let toggle;
+    let result;
+
+    if (!favorite) {
+      throw HttpError(400, 'Undefined query');
+    }
+
+    toggle = Boolean(favorite.replace(/\s*(false|null|undefined|0)\s*/i, ''));
+    const action = toggle ? 'add' : 'remove';
+
+    const isFavorite = await petService.hasInFavorites(noticeId, userId);
+
+    if (action === 'add' && !isFavorite) {
+      result = await petService.pushInFavorites(noticeId, userId);
+    } else if (action === 'remove' && isFavorite) {
+      result = await petService.pullFromFavorites(noticeId, userId);
+    } else {
+      throw HttpError(400, 'Invalid action', 'NoticeControllerError');
+    }
+
+    res.status(200);
+    res.json({
+      code: 200,
+      message: 'Ok',
+      data: {
+        notice: this.responseSchema(result),
+      },
+    });
+  });
 }
 
 const noticeController = new NoticeController();

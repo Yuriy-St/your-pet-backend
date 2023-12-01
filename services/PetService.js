@@ -52,7 +52,7 @@ class PetService {
     return total;
   }
 
-  async getById(id, projection = {}) {
+  async getById(id, projection = null) {
     const candidate = await Pet.findById(id, projection);
     if (!candidate) {
       throw HttpError(404);
@@ -81,6 +81,36 @@ class PetService {
     const filterPet = { id };
     const resource = await Pet.findOneAndUpdate(filterPet, body, { new: true });
     return resource;
+  }
+
+  async pushInFavorites(id, userId) {
+    const result = await Pet.findByIdAndUpdate(
+      id,
+      {
+        $push: { inFavorites: userId },
+      },
+      { new: true }
+    );
+    return result;
+  }
+
+  async pullFromFavorites(id, userId) {
+    const result = await Pet.findByIdAndUpdate(
+      id,
+      {
+        $pull: { inFavorites: userId },
+      },
+      { new: true }
+    );
+    return result;
+  }
+
+  async hasInFavorites(id, userId) {
+    const result = await Pet.findOne({
+      _id: id,
+      inFavorites: userId,
+    });
+    return result;
   }
 }
 

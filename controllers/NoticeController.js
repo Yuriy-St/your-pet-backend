@@ -168,8 +168,37 @@ class NoticeController {
     });
   });
 
-  // find by category and/or by matching title
-  getByFilter() {}
+  // find favorites and/or by matching title
+  findFavorites = asyncHandler(async (req, res) => {
+    const { _id: owner } = req.user;
+    const { q } = req.query;
+    const filter = {
+      inFavorites: owner,
+      title: { $regex: new RegExp(q, 'i') },
+    };
+    const total = await petService.countNotices(filter);
+
+    let notices = [];
+
+    if (total > 0) {
+      notices = await petService.findNotices({
+        filter,
+        sort: { createdAt: -1 },
+        options: { ...paging },
+      });
+    }
+
+    res.status(200);
+    res.json({
+      code: 200,
+      message: 'Ok',
+      data: {
+        total,
+        qty: notices.length,
+        notices,
+      },
+    });
+  });
 
   // add/remove from favorites list
   toggleFavorites = asyncHandler(async (req, res) => {

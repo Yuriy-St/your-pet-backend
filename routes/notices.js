@@ -28,6 +28,14 @@ router.post(
   noticeController.toggleFavorites
 );
 
+// get favorites
+router.get(
+  '/favorites',
+  authenticate,
+  isValidId,
+  noticeController.findFavorites
+);
+
 // remove a notice
 router.delete('/:id', authenticate, isValidId, noticeController.remove);
 

@@ -171,6 +171,7 @@ class NoticeController {
   // find favorites and/or by matching title
   findFavorites = asyncHandler(async (req, res) => {
     const { _id: owner } = req.user;
+    const { paging } = req;
     const { q } = req.query;
     const filter = {
       inFavorites: owner,

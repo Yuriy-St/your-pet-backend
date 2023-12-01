@@ -22,14 +22,14 @@ const loginSchema = Joi.object({
 });
 
 const updateSchema = Joi.object({
-  name: Joi.string(),
+  name: Joi.string().allow(''),
   email: Joi.string().email({
     minDomainSegments: 2,
     tlds: false,
   }),
   birthday: Joi.date().format('DD-MM-YYYY'),
-  phone: Joi.string(),
-  city: Joi.string(),
+  phone: Joi.string().allow(''),
+  city: Joi.string().allow(''),
 });
 
 module.exports = {

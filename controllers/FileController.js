@@ -1,4 +1,4 @@
-const fs = require('fs/promises');
+const fsp = require('fs/promises');
 const cloudinaryService = require('../services/CloudinaryService');
 
 class FileController {
@@ -10,7 +10,7 @@ class FileController {
         public_id: id,
       }
     );
-    fs.unlink(srcPath);
+    fsp.unlink(srcPath);
 
     return { secure_url, public_id };
   };

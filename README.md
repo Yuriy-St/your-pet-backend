@@ -14,9 +14,9 @@ This backend is written for
 
 ![Express][Express]
 
-![Muller][Muller]
-
 ![jsonwebtokens][jsonwebtokens]
+
+![cloudinary][cloudinary]
 
 ![Swagger][Swagger]
 
@@ -41,7 +41,7 @@ This backend is written for
   https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=Express&logoColor=FFF
 [Swagger]:
   https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=FFF
-[Muller]:
-  https://img.shields.io/badge/Muller-F46519?style=for-the-badge&logo=muller&logoColor=FFF
 [jsonwebtokens]:
   https://img.shields.io/badge/jsonwebtokens-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=FFF
+[cloudinary]:
+  https://img.shields.io/badge/%D0%A1loudinary-3F5FFF?style=for-the-badge

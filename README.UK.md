@@ -1,10 +1,9 @@
 # your-pet-backend
 
-This backend is written for
-[Your Pets](https://borysshabazov.github.io/YourPet/)
+Цей бекенд створений для [Your Pets](https://borysshabazov.github.io/YourPet/)
 <img src="https://i.ibb.co/LZ3w3VM/image.png" alt="Your Pets"/>
 
-## 📃Technologies
+## Технології
 
 ![Node.js][Node]
 
@@ -20,14 +19,14 @@ This backend is written for
 
 ![Swagger][Swagger]
 
-## 💻Collaborators
+## 💻Співавтори
 
 - [Yuriy Staynov](https://github.com/Yuriy-St)
 - [OLEKSANDR KUROCHKIN](https://github.com/ASKurochkin)
 - [Andrii Kuzhelnii](https://github.com/ribacot)
 - [Tanya Pavliuk](https://github.com/Tanyapavliuk)
 
-## Documentation
+## Документація
 
 <a href="https://your-pet-server.onrender.com/api-docs/" target="_blank">![see documentation here](https://i.ibb.co/GtLv2G3/image.png)</a>
 

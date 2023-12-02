@@ -2,6 +2,8 @@ const path = require('path');
 const asyncHandler = require('../helpers/asyncHandler');
 const AuthService = require('../services/AuthService');
 const fileController = require('./FileController');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 class AuthController {
   responseUserSchema = user => ({
@@ -20,7 +22,7 @@ class AuthController {
       avatarURL: process.env.AVATAR_DEFAULT_URL,
       avatarId: `${req.body.name}_${Date.now()}`,
     });
-    const user = await AuthService.login(req.body);
+    const user = await AuthService.log in(req.body);
 
     res.status(201).json({
       code: 201,
@@ -87,6 +89,15 @@ class AuthController {
     });
   });
 
+  googleAuth = asyncHandler(async (req, res) => {
+    console.log(req);
+  const { _id: id } = req.user;
+  const payload = { id }
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '744h' })
+  await User.findByIdAndUpdate(id, token)
+  res.redirect(`http://localhost:5173/YourPet?token=${token}`)
+})
+
   // add a notice to the favorite list
   addFavorite(owner, noticeId) {}
 
@@ -96,6 +107,8 @@ class AuthController {
   // remove a notice from the favorite list
   removeFavorite(owner, noticeId) {}
 }
+
+
 
 const authController = new AuthController();
 module.exports = authController;

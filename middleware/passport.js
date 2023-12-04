@@ -3,7 +3,7 @@ const passport = require("passport");
 const {nanoid} = require("nanoid");
 const bcrypt = require("bcrypt");
 
-const {User} = require("../models/User");
+const User = require("../models/User");
 
 const {GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL} = process.env;
 
@@ -17,14 +17,15 @@ const googleParams = {
 const googleCallback = async(req, accessToken, refreshToken, profile, done) => {
     try {
         console.log(profile);
-        const {email, displayName} = profile;
+        const { email, displayName } = profile;
+        console.log("User model:", User)
         const user = await User.findOne({email});
         if(user) {
-            done(null, user); // req.user = user;
+           return done(null, user); // req.user = user;
         }
         const password = nanoid();
         const hashPassword = await bcrypt.hash(password, 10);
-        const newUser = await User.create({email, name: displayName, password: hashPassword});
+        const newUser = await User.create({email, name: displayName, password: hashPassword, avatarURL: process.env.AVATAR_DEFAULT_URL});
         done(null, newUser);
     } 
     catch(error) {

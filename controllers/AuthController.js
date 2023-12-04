@@ -93,9 +93,9 @@ class AuthController {
     console.log(req);
   const { _id: id } = req.user;
   const payload = { id }
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '744h' })
+  const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '744h' })
   await User.findByIdAndUpdate(id, token)
-  res.redirect(`http://localhost:5173/YourPet?token=${token}`)
+  res.redirect(`http://localhost:5173/YourPet/user?token=${token}`)
 })
 
   // add a notice to the favorite list

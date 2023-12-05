@@ -5,6 +5,7 @@ const schemas = require('../schemas/userSchemas');
 const authController = require('../controllers/AuthController');
 const authenticate = require('../middleware/authenticate');
 const upload = require('../middleware/upload');
+const passport = require('../middleware/passport');
 
 const router = express.Router();
 
@@ -13,6 +14,9 @@ router.post(
   validateBody(schemas.registerSchema),
   authController.register
 );
+router.get('/google', passport.authenticate("google", { scope: ["email", "profile"] }))
+
+router.get('/google/callback', passport.authenticate("google", {session:false}), authController.googleAuth)
 
 router.post('/login', validateBody(schemas.loginSchema), authController.login);
 

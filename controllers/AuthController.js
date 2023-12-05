@@ -86,15 +86,6 @@ class AuthController {
       },
     });
   });
-
-  // add a notice to the favorite list
-  addFavorite(owner, noticeId) {}
-
-  // get the favorite list
-  getFavorites() {}
-
-  // remove a notice from the favorite list
-  removeFavorite(owner, noticeId) {}
 }
 
 const authController = new AuthController();

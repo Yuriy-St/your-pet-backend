@@ -32,8 +32,13 @@ const updateSchema = Joi.object({
   city: Joi.string().allow(''),
 });
 
+const refreshSchema = Joi.object({
+  refreshToken: Joi.string().required(),
+});
+
 module.exports = {
   registerSchema,
   loginSchema,
   updateSchema,
+  refreshSchema,
 };

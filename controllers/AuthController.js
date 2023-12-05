@@ -28,8 +28,16 @@ class AuthController {
       code: 201,
       message: 'User registered successfully.',
       data: {
-        user: this.responseUserSchema(user),
-        token: user.token,
+        user: {
+          name: user.name,
+          email: user.email,
+          birthday: user.birthday || '',
+          phone: user.phone || '',
+          city: user.city,
+          avatarURL: user.avatarURL,
+        },
+        accessToken: user.accessToken,
+        refreshToken: user.refreshToken,
       },
     });
   });
@@ -41,8 +49,28 @@ class AuthController {
       code: 200,
       message: 'User logged in successfully',
       data: {
-        user: this.responseUserSchema(user),
-        token: user.token,
+        user: {
+          name: user.name,
+          email: user.email,
+          birthday: user.birthday || '',
+          phone: user.phone || '',
+          city: user.city,
+          avatarURL: user.avatarURL,
+        },
+        accessToken: user.accessToken,
+        refreshToken: user.refreshToken,
+      },
+    });
+  });
+
+  refresh = asyncHandler(async (req, res) => {
+    const { accessToken, refreshToken } = await AuthService.refresh(req.body);
+    res.status(200).json({
+      code: 200,
+      message: 'Access token refresh successfully',
+      data: {
+        accessToken,
+        refreshToken,
       },
     });
   });
